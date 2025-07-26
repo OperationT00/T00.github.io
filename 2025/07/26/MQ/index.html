@@ -9,7 +9,7 @@
     
     <title>
         
-            RabbitMQ |
+            MQ |
         
         Keeping T00
     </title>
@@ -208,7 +208,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        RabbitMQ
+                        MQ
                     </div>
                 
 
@@ -242,7 +242,7 @@
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Sat Jul 26 2025 14:37:29 GMT+0800">2025-07-26 14:37:29</span>
+                    <span class="datetime" data-updated="Sat Jul 26 2025 16:30:43 GMT+0800">2025-07-26 16:30:43</span>
                 </span>
             
         
@@ -254,7 +254,7 @@
         
         
             <span class="meta-info-item post-wordcount">
-                <i class="icon fas fa-file-word"></i>&nbsp;<span>249 Words</span>
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>2.2k Words</span>
             </span>
         
         
@@ -286,12 +286,117 @@
 </li>
 </ul>
 <p>所以，如果我们的业务<strong>需要实时得到服务提供方的响应</strong>，则应该选择同步通讯（同步调用），而如果我们追求<strong>更高的效率</strong>，并且不需要实时响应，则应该选择异步通讯（异步调用）。</p>
-<p><img  
+<p>接下来我们再来理解一下同步调用和异步调用。</p>
+<h1 id="同步调用"><a href="#同步调用" class="headerlink" title="同步调用"></a>同步调用</h1><p>以下根据一个支付服务对<strong>同步业务</strong>进行解析</p>
+<img    
                        lazyload
                        alt="image"
-                       data-src="D:\Blog\public\assets\image-20250726135524800.png"
-                        alt="image-20250726135524800"
-                 ></p>
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets/image-20250726135524800.8s3lwq637l.webp"
+                         alt="image-20250726135524800" 
+                 >
+
+<p>首先解释一下业务流程：</p>
+<ul>
+<li>支付服务需要先调用用户服务完成余额扣减</li>
+<li>然后支付服务自己要更新支付流水单的状态</li>
+<li>然后支付服务调用交易服务，更新业务订单状态为已支付</li>
+</ul>
+<p>三个步骤&#x3D;&#x3D;依次&#x3D;&#x3D;执行。</p>
+<p>看似没有问题，逻辑清晰，但是其中存在三个问题</p>
+<ol>
+<li>拓展性差</li>
+</ol>
+<p>如果在业务后期需要给它加入一个短信通知业务，积分业务等等。。</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250715163910957.6bhdht6h1n.webp"
+                         alt="image-20250715163910957" 
+                 >
+
+<p>每次添加业务都需要修改大量代码（不仅要在支付服务的接口中定义新的接口，新的接口又与旧的接口中有交互），非常臃肿，不符合开闭原则，拓展性不好。</p>
+<ol start="2">
+<li>性能差</li>
+</ol>
+<p>调用者需要等待上一个服务执行完之后，<strong>有结果后</strong>，才能继续向下执行，也就是说每次调用，调用者都是处于<strong>阻塞等待状态</strong>。最终整个业务的响应时长就是每次调用的执行时长之和：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250715164006945.2ks7wkhlu4.webp"
+                         alt="image-20250715164006945" 
+                 >
+
+<p>假如每个微服务的执行时长都是50ms，则最终整个业务的耗时可能高达300ms，性能太差了，用户都等炸毛了。</p>
+<ol start="3">
+<li>级联失败</li>
+</ol>
+<ul>
+<li>“级联失败”（Cascading Failure）是一个在分布式系统中常见的现象，指的是一个系统中的某个组件或服务发生故障时，导致其他相关联的组件或服务也相继发生故障，从而引发整个系统的崩溃或性能大幅下降。</li>
+</ul>
+<p>由于我们是基于OpenFeign调用交易服务、通知服务。当交易服务、通知服务出现故障时，整个事务都会<strong>回滚</strong>，交易失败。</p>
+<p>如果只是因为短信通知故障，导致之前收到的钱又返还了，是很得不偿失的，因为你不知道这个用户是否还会在你这里进行购物。。。。</p>
+<p>（<strong>OpenFeign</strong> 是一个用于简化 HTTP 请求的 Java 库，主要用于服务间的通信。它通过声明式的方式，使得开发者能够更简洁地发起 RESTful 请求，而不需要显式地编写底层的 HTTP 客户端代码。在这里不用过多了解）</p>
+<p>这其实就是同步调用的<strong>级联失败</strong>问题。</p>
+<p>针对于这三个问题，我们就必须用<strong>异步调用</strong>的方式来代替<strong>同步调用</strong>。</p>
+<h1 id="异步调用"><a href="#异步调用" class="headerlink" title="异步调用"></a>异步调用</h1><p>异步调用方式其实就是基于&#x3D;&#x3D;消息通知&#x3D;&#x3D;的方式，一般包含三个角色：</p>
+<ul>
+<li>消息发送者：投递消息的人，就是原来的<strong>调用方</strong>（对应上面的例子就是支付服务）</li>
+<li>消息Broker：<strong>管理、暂存、转发</strong>消息，你可以把它理解成<strong>微信服务器</strong>。</li>
+<li>消息接收者：接收和处理消息的人，就是原来的<strong>服务提供方</strong>（对应上面的交易服务，通知服务等等。。）</li>
+</ul>
+<p>在异步调用中，发送者<strong>不再直接同步调用接收者的业务接口</strong>，而是<strong>发送一条消息</strong>投递给消息Broker。</p>
+<p>然后接收者根据自己的需求从消息Broker那里<strong>订阅消息</strong>。每当发送方发送消息后，接受者都能<strong>获取消息并处理</strong>。</p>
+<p>这样，发送消息的人和接收消息的人就完全<strong>解耦</strong>了。</p>
+<p>就好比送外卖，<strong>同步调用</strong>就是外卖小哥外卖送到了必须等你在他手上把外卖拿走了才能送下一旦，<strong>异步调用</strong>就是他送到了，直接把外卖放在外卖柜上（Broker），然后给你发个消息“外卖到了”，你也只用接收“外卖到了”这个消息就好。</p>
+<hr>
+<p>针对于刚刚的例子，只用在用户服务完成之后，返回支付服务<strong>发送一条消息</strong>，然后接下来的交易服务，通知服务，积分服务都<strong>只需要监听</strong>这个消息即可，他们之间是相互<strong>独立的，并发的。</strong></p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250715164731465.6f0zfizjrh.webp"
+                         alt="image-20250715164731465" 
+                 >
+
+<p>不管后期增加了多少消息订阅者，作为支付服务来讲，执行问扣减余额、更新支付流水状态后，<strong>发送消息即可</strong>，不再需要在代码中增加对其他新的业务的调用。业务耗时仅仅是这三部分业务耗时，仅仅100ms，大大&#x3D;&#x3D;提高了业务性能&#x3D;&#x3D;。</p>
+<p>另外，不管是交易服务、通知服务，还是积分服务，他们的业务与支付关联度低，现在采用了异步调用，解除了耦合，他们即便执行过程中出现了故障，也不会影响到支付服务，解决了级联失败。</p>
+<p>同时有业务功能的添加也不需要动源代码，只需接收他们发出的消息即可，拓展性更好。</p>
+<p>这样的话它的压力主要集中在发送消息这一步，后续的服务可以根据自己的能力按需处理消息，相对来说很平稳，这种现象我们可以理解为削峰。</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250715165911270.2a5e3f2dou.webp"
+                         alt="image-20250715165911270" 
+                 >
+
+<hr>
+<h1 id="MQ"><a href="#MQ" class="headerlink" title="MQ"></a>MQ</h1><p>综上来看，MQ的本质就是一个阻塞队列， 只不过它在阻塞队列的基础上增加了重试, 消息持久化等等功能.。</p>
+<p>那它有什么优缺点呢？</p>
+<p>我们用去咖啡店买咖啡为例，如果是采用同步通讯的方法去买咖啡，我们给咖啡馆店员点餐后，我们还需要站在柜台等待他把咖啡做完，然后下一位顾客才可以进行点单，整个一条队伍把咖啡都买完的时间非常久。</p>
+<ol>
+<li>异步</li>
+</ol>
+<p>如果我们在其中运用MQ的思维，在吧台准备一个自动点餐机，用户可以在上面自行点餐，然后生成一张小票，点完之后，用户就可以走了，不用等待店员把咖啡做好，而咖啡馆店员也不用在吧台等别人来点餐，他只需要在后台备料，等有订单了，再去着手做咖啡。这就是异步。</p>
+<ol start="2">
+<li>解耦</li>
+</ol>
+<p>在点单过后，店员就着手于做咖啡，而顾客也不用站在队伍里等候，顾客可以去上厕所，可以去买早餐，这就达到了解耦的目的。</p>
+<ol start="3">
+<li>削峰</li>
+</ol>
+<p>在人流量很大的时候，比如早高峰，很多人都需要购买咖啡，然后不同的店员做咖啡的效率不一样，每个顾客点的咖啡做的难度也不一样，店员谁有空谁就去做下一杯，就可以避免一个店员过载导致的等待时间过长，这就是削峰。</p>
+<p>虽然有很多优点，但是这种模式下也会有缺点。</p>
+<ol>
+<li>可用性降低</li>
+</ol>
+<p>系统不同服务之间就靠一个MQ连接，如果MQ挂了，整个服务器就崩溃了（虽然不太可能）。</p>
+<ol start="2">
+<li>复杂度更高</li>
+</ol>
+<p>消息的重复出现，消息是否会失效，还有顺序问题都导致了系统复杂的更高。</p>
+<ol start="3">
+<li>数据一致性的问题</li>
+</ol>
+<p>系统中难免会发生某一个业务出现问题，就比如B,C,D三个服务都需要对同一个事务进行数据库的写入或者修改，B,C都成功了，D失败了，整个事务在数据库中的状态就不一样了，这也是需要考虑的点。</p>
 
                     
                 </div>
@@ -327,7 +432,7 @@
             <div class="pc-post-toc right-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5-%E5%BC%82%E6%AD%A5%E9%80%9A%E8%AE%AF"><span class="nav-text">同步&#x2F;异步通讯</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5-%E5%BC%82%E6%AD%A5%E9%80%9A%E8%AE%AF"><span class="nav-text">同步&#x2F;异步通讯</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E8%B0%83%E7%94%A8"><span class="nav-text">同步调用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8"><span class="nav-text">异步调用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MQ"><span class="nav-text">MQ</span></a></li></ol>
     </div>
 </div>
 
@@ -362,7 +467,7 @@
             
                 <span class="count-item border-box word">
                     <span class="item-type border-box">Total words</span>
-                    <span class="item-value border-box word">249</span>
+                    <span class="item-value border-box word">2.2k</span>
                 </span>
             
 
@@ -510,7 +615,7 @@
             <div class="tablet-post-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5-%E5%BC%82%E6%AD%A5%E9%80%9A%E8%AE%AF"><span class="nav-text">同步&#x2F;异步通讯</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5-%E5%BC%82%E6%AD%A5%E9%80%9A%E8%AE%AF"><span class="nav-text">同步&#x2F;异步通讯</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E8%B0%83%E7%94%A8"><span class="nav-text">同步调用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8"><span class="nav-text">异步调用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MQ"><span class="nav-text">MQ</span></a></li></ol>
     </div>
 </div>
 
