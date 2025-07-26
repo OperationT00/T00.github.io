@@ -9,7 +9,7 @@
     
     <title>
         
-            Hello World |
+            RabbitMQ |
         
         Keeping T00
     </title>
@@ -208,7 +208,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        Hello World
+                        RabbitMQ
                     </div>
                 
 
@@ -236,13 +236,13 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2025-07-26 00:25:30</span>
+                <span class="datetime">2025-07-26 13:44:31</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Sat Jul 26 2025 00:25:30 GMT+0800">2025-07-26 00:25:30</span>
+                    <span class="datetime" data-updated="Sat Jul 26 2025 14:00:16 GMT+0800">2025-07-26 14:00:16</span>
                 </span>
             
         
@@ -254,7 +254,7 @@
         
         
             <span class="meta-info-item post-wordcount">
-                <i class="icon fas fa-file-word"></i>&nbsp;<span>75 Words</span>
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>249 Words</span>
             </span>
         
         
@@ -277,19 +277,21 @@
                     
 
                     
-                         <p>Welcome to <a class="link"   target="_blank" rel="noopener" href="https://hexo.io/" >Hexo<i class="fas fa-external-link-alt"></i></a>! This is your very first post. Check <a class="link"   target="_blank" rel="noopener" href="https://hexo.io/docs/" >documentation<i class="fas fa-external-link-alt"></i></a> for more info. If you get any problems when using Hexo, you can find the answer in <a class="link"   target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html" >troubleshooting<i class="fas fa-external-link-alt"></i></a> or you can ask me on <a class="link"   target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues" >GitHub<i class="fas fa-external-link-alt"></i></a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a class="link"   target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html" >Writing<i class="fas fa-external-link-alt"></i></a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a class="link"   target="_blank" rel="noopener" href="https://hexo.io/docs/server.html" >Server<i class="fas fa-external-link-alt"></i></a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a class="link"   target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html" >Generating<i class="fas fa-external-link-alt"></i></a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a class="link"   target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html" >Deployment<i class="fas fa-external-link-alt"></i></a></p>
+                         <h1 id="同步-异步通讯"><a href="#同步-异步通讯" class="headerlink" title="同步&#x2F;异步通讯"></a>同步&#x2F;异步通讯</h1><p>首先，我们知道MQ（Message Queue，消息队列）是一种通信机制，那通讯机制又是什么呢？</p>
+<ul>
+<li>通讯机制又分为同步通讯和异步通讯<ul>
+<li>同步通讯可以看作是用手机给别人打电话，双方的交互是实时的，这时可以<strong>立即得到响应</strong>，但是你却<strong>不能跟多个人同时通话</strong>。</li>
+<li>异步通讯就好比微信发送消息，双方的交互并不是实时的，你可以立即回复消息，也可以等一段时间回复，这样就会使得消息之间的<strong>传递有延迟</strong>，但是你还可以<strong>同时与多个人收发</strong>消息。</li>
+</ul>
+</li>
+</ul>
+<p>所以，如果我们的业务<strong>需要实时得到服务提供方的响应</strong>，则应该选择同步通讯（同步调用），而如果我们追求<strong>更高的效率</strong>，并且不需要实时响应，则应该选择异步通讯（异步调用）。</p>
+<p><img  
+                       lazyload
+                       alt="image"
+                       data-src="/./RabbitMQ.assets/image-20250726135524800.png"
+                        alt="image-20250726135524800"
+                 ></p>
 
                     
                 </div>
@@ -325,7 +327,7 @@
             <div class="pc-post-toc right-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5-%E5%BC%82%E6%AD%A5%E9%80%9A%E8%AE%AF"><span class="nav-text">同步&#x2F;异步通讯</span></a></li></ol>
     </div>
 </div>
 
@@ -360,7 +362,7 @@
             
                 <span class="count-item border-box word">
                     <span class="item-type border-box">Total words</span>
-                    <span class="item-value border-box word">75</span>
+                    <span class="item-value border-box word">249</span>
                 </span>
             
 
@@ -508,7 +510,7 @@
             <div class="tablet-post-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5-%E5%BC%82%E6%AD%A5%E9%80%9A%E8%AE%AF"><span class="nav-text">同步&#x2F;异步通讯</span></a></li></ol>
     </div>
 </div>
 
