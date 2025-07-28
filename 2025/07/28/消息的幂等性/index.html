@@ -9,7 +9,7 @@
     
     <title>
         
-            MQ引入 |
+            消息的幂等性 |
         
         Keeping T00
     </title>
@@ -230,7 +230,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        MQ引入
+                        消息的幂等性
                     </div>
                 
 
@@ -258,13 +258,13 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2025-07-26 13:44:31</span>
+                <span class="datetime">2025-07-28 22:02:21</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Mon Jul 28 2025 16:53:33 GMT+0800">2025-07-28 16:53:33</span>
+                    <span class="datetime" data-updated="Mon Jul 28 2025 23:12:14 GMT+0800">2025-07-28 23:12:14</span>
                 </span>
             
         
@@ -294,7 +294,7 @@
         
         
             <span class="meta-info-item post-wordcount">
-                <i class="icon fas fa-file-word"></i>&nbsp;<span>2.2k Words</span>
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>1.2k Words</span>
             </span>
         
         
@@ -317,126 +317,116 @@
                     
 
                     
-                         <h1 id="同步-异步通讯"><a href="#同步-异步通讯" class="headerlink" title="同步&#x2F;异步通讯"></a>同步&#x2F;异步通讯</h1><p>首先，我们知道MQ（Message Queue，消息队列）是一种通信机制，那通讯机制又是什么呢？</p>
+                         <h1 id="幂等性是什么"><a href="#幂等性是什么" class="headerlink" title="幂等性是什么"></a>幂等性是什么</h1><p><strong>幂等</strong>是一个数学概念，用函数表达式来描述是这样的：<code>f(x) = f(f(x))</code>，例如求绝对值函数。</p>
+<p>放在业务中，幂等就是i<strong>同一条消息被重复消费多次，业务结果只会被执行一次</strong>，不会引发副作用（如重复扣库存、重复发优惠券、重复扣款等），一句话就是指同一个业务，执行一次或多次对业务状态的影响是一致的。</p>
+<h1 id="为什么要保证幂等性"><a href="#为什么要保证幂等性" class="headerlink" title="为什么要保证幂等性"></a>为什么要保证幂等性</h1><p>但数据的更新往往不是幂等的，如果重复执行可能造成不一样的后果。比如：</p>
 <ul>
-<li>通讯机制又分为同步通讯和异步通讯<ul>
-<li>同步通讯可以看作是用手机给别人打电话，双方的交互是实时的，这时可以<strong>立即得到响应</strong>，但是你却<strong>不能跟多个人同时通话</strong>。</li>
-<li>异步通讯就好比微信发送消息，双方的交互并不是实时的，你可以立即回复消息，也可以等一段时间回复，这样就会使得消息之间的<strong>传递有延迟</strong>，但是你还可以<strong>同时与多个人收发</strong>消息。</li>
+<li>取消订单，恢复库存的业务。如果多次恢复就会出现库存重复增加的情况</li>
+<li>退款业务。重复退款对商家而言会有经济损失。</li>
 </ul>
-</li>
-</ul>
-<p>所以，如果我们的业务<strong>需要实时得到服务提供方的响应</strong>，则应该选择同步通讯（同步调用），而如果我们追求<strong>更高的效率</strong>，并且不需要实时响应，则应该选择异步通讯（异步调用）。</p>
-<p>接下来我们再来理解一下同步调用和异步调用。</p>
-<h1 id="同步调用"><a href="#同步调用" class="headerlink" title="同步调用"></a>同步调用</h1><p>以下根据一个支付服务对<strong>同步业务</strong>进行解析</p>
-<img    
-                       lazyload
-                       alt="image"
-                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets/image-20250726135524800.8s3lwq637l.webp"
-                         alt="image-20250726135524800" 
-                 >
-
-<p>首先解释一下业务流程：</p>
-<ul>
-<li>支付服务需要先调用用户服务完成余额扣减</li>
-<li>然后支付服务自己要更新支付流水单的状态</li>
-<li>然后支付服务调用交易服务，更新业务订单状态为已支付</li>
-</ul>
-<p>三个步骤依次执行。</p>
-<p>看似没有问题，逻辑清晰，但是其中存在三个问题</p>
+<p>所以，我们要尽可能避免业务被重复执行。</p>
+<p>但是RabbitMQ 或任何 MQ 都不能 100% 保证只投递一次或只消费一次，可能因为：</p>
 <ol>
-<li>拓展性差</li>
+<li>消息重复投递</li>
+<li>消息可能重新进入队列</li>
+<li>消息可能重复消费</li>
 </ol>
-<p>如果在业务后期需要给它加入一个短信通知业务，积分业务等等。。</p>
-<img    
-                       lazyload
-                       alt="image"
-                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250715163910957.6bhdht6h1n.webp"
-                         alt="image-20250715163910957" 
-                 >
-
-<p>每次添加业务都需要修改大量代码（不仅要在支付服务的接口中定义新的接口，新的接口又与旧的接口中有交互），非常臃肿，不符合开闭原则，拓展性不好。</p>
-<ol start="2">
-<li>性能差</li>
+<p>等等原因….</p>
+<p>所以在<strong>业务层</strong>保证幂等性显得尤为重要。</p>
+<h1 id="如何保证幂等性"><a href="#如何保证幂等性" class="headerlink" title="如何保证幂等性"></a>如何保证幂等性</h1><h2 id="数据库唯一约束"><a href="#数据库唯一约束" class="headerlink" title="数据库唯一约束"></a>数据库唯一约束</h2><p>如果从MQ拿到数据是要存到数据库，那么可以根据数据（创建一个UUID）创建唯一约束；这样的话，<strong>同样的数据</strong>从MQ发送过来之后，当插入数据库的时候，会报<strong>违反唯一约束</strong>的异常，不会插入成功的。</p>
+<ol>
+<li>每条消息携带唯一 ID（如 <code>messageId</code>、订单号）</li>
+<li>数据库建表并为 <code>messageId</code> 设置唯一约束：</li>
 </ol>
-<p>调用者需要等待上一个服务执行完之后，<strong>有结果后</strong>，才能继续向下执行，也就是说每次调用，调用者都是处于<strong>阻塞等待状态</strong>。最终整个业务的响应时长就是每次调用的执行时长之和：</p>
-<img    
-                       lazyload
-                       alt="image"
-                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250715164006945.2ks7wkhlu4.webp"
-                         alt="image-20250715164006945" 
-                 >
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> message_log (</span><br><span class="line">  message_id <span class="type">VARCHAR</span>(<span class="number">64</span>) <span class="keyword">PRIMARY KEY</span>,</span><br><span class="line">  ...</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
 
-<p>假如每个微服务的执行时长都是50ms，则最终整个业务的耗时可能高达300ms，性能太差了，用户都等炸毛了。</p>
 <ol start="3">
-<li>级联失败</li>
+<li>消费者处理消息时，尝试插入 <code>messageId</code>：</li>
 </ol>
 <ul>
-<li>“级联失败”（Cascading Failure）是一个在分布式系统中常见的现象，指的是一个系统中的某个组件或服务发生故障时，导致其他相关联的组件或服务也相继发生故障，从而引发整个系统的崩溃或性能大幅下降。</li>
+<li>插入成功：说明是第一次处理 → 执行业务</li>
+<li>插入失败：违反唯一约束 → 表示已处理，跳过</li>
 </ul>
-<p>由于我们是基于OpenFeign调用交易服务、通知服务。当交易服务、通知服务出现故障时，整个事务都会<strong>回滚</strong>，交易失败。</p>
-<p>如果只是因为短信通知故障，导致之前收到的钱又返还了，是很得不偿失的，因为你不知道这个用户是否还会在你这里进行购物。。。。</p>
-<p>（<strong>OpenFeign</strong> 是一个用于简化 HTTP 请求的 Java 库，主要用于服务间的通信。它通过声明式的方式，使得开发者能够更简洁地发起 RESTful 请求，而不需要显式地编写底层的 HTTP 客户端代码。在这里不用过多了解）</p>
-<p>这其实就是同步调用的<strong>级联失败</strong>问题。</p>
-<p>针对于这三个问题，我们就必须用<strong>异步调用</strong>的方式来代替<strong>同步调用</strong>。</p>
-<h1 id="异步调用"><a href="#异步调用" class="headerlink" title="异步调用"></a>异步调用</h1><p>异步调用方式其实就是基于消息通知的方式，一般包含三个角色：</p>
+<h2 id="消息唯一id"><a href="#消息唯一id" class="headerlink" title="消息唯一id"></a>消息唯一id</h2><p>在生产者发送消息时，创建一个全局唯一id，在消费的时候，都先去redis里面查询是否有这个id，如果没有就执行业务插入id，如果有了，就跳过不执行业务。</p>
 <ul>
-<li>消息发送者：投递消息的人，就是原来的<strong>调用方</strong>（对应上面的例子就是支付服务）</li>
-<li>消息Broker：<strong>管理、暂存、转发</strong>消息，你可以把它理解成<strong>微信服务器</strong>。</li>
-<li>消息接收者：接收和处理消息的人，就是原来的<strong>服务提供方</strong>（对应上面的交易服务，通知服务等等。。）</li>
+<li>Redis 的 <code>setIfAbsent</code> 是原子操作，线程安全</li>
+<li>可设置过期时间，释放空间</li>
+<li>更适合高并发、轻量级幂等</li>
 </ul>
-<p>在异步调用中，发送者<strong>不再直接同步调用接收者的业务接口</strong>，而是<strong>发送一条消息</strong>投递给消息Broker。</p>
-<p>然后接收者根据自己的需求从消息Broker那里<strong>订阅消息</strong>。每当发送方发送消息后，接受者都能<strong>获取消息并处理</strong>。</p>
-<p>这样，发送消息的人和接收消息的人就完全<strong>解耦</strong>了。</p>
-<p>就好比送外卖，<strong>同步调用</strong>就是外卖小哥外卖送到了必须等你在他手上把外卖拿走了才能送下一旦，<strong>异步调用</strong>就是他送到了，直接把外卖放在外卖柜上（Broker），然后给你发个消息“外卖到了”，你也只用接收“外卖到了”这个消息就好。</p>
-<hr>
-<p>针对于刚刚的例子，只用在用户服务完成之后，返回支付服务<strong>发送一条消息</strong>，然后接下来的交易服务，通知服务，积分服务都<strong>只需要监听</strong>这个消息即可，他们之间是相互<strong>独立的，并发的。</strong></p>
+<h2 id="二者的共性及区别"><a href="#二者的共性及区别" class="headerlink" title="二者的共性及区别"></a>二者的共性及区别</h2><ul>
+<li>其实两种实现的基础都是在一个<strong>唯一id</strong>上，所以他们的共性就是在生成id上，这里我提供一种id的生成方式。</li>
+</ul>
+<h3 id="共性"><a href="#共性" class="headerlink" title="共性"></a>共性</h3><p>我们翻阅源码，发现在消息转换器的底层中有这样一段：<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250717174614007.2obtuaaolo.webp"
+                         alt="image-20250717174614007" 
+                 ></p>
+<p>消息转换器的底层其实自动生成过一个id，我们只需要把<code>CreateMessageIds</code>的值设置为<code>true</code>即可使用。</p>
+<p>所以我们将之前的消息转换器改造一下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> MessageConverter <span class="title function_">messageConverter</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="comment">// 1.定义消息转换器</span></span><br><span class="line">    <span class="type">Jackson2JsonMessageConverter</span> <span class="variable">jjmc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Jackson2JsonMessageConverter</span>();</span><br><span class="line">    <span class="comment">// 2.配置自动创建消息id，用于识别不同消息，也可以在业务中基于ID判断是否是重复消息</span></span><br><span class="line">    jjmc.setCreateMessageIds(<span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">return</span> jjmc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先我们先不改变消息转换器，发送一条消息，然后改造之后再发送一条同样的消息。</p>
+<p>现在来测试一下:</p>
+<p>发现了改造之后的消息，携带了一个id!!</p>
 <img    
                        lazyload
                        alt="image"
-                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250715164731465.6f0zfizjrh.webp"
-                         alt="image-20250715164731465" 
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250717180038565.7w74ha3ojx.webp"
+                         alt="image-20250717180038565" 
                  >
 
-<p>不管后期增加了多少消息订阅者，作为支付服务来讲，执行问扣减余额、更新支付流水状态后，<strong>发送消息即可</strong>，不再需要在代码中增加对其他新的业务的调用。业务耗时仅仅是这三部分业务耗时，仅仅100ms，大大提高了业务性能。</p>
-<p>另外，不管是交易服务、通知服务，还是积分服务，他们的业务与支付关联度低，现在采用了异步调用，解除了耦合，他们即便执行过程中出现了故障，也不会影响到支付服务，解决了级联失败。</p>
-<p>同时有业务功能的添加也不需要动源代码，只需接收他们发出的消息即可，拓展性更好。</p>
-<p>这样的话它的压力主要集中在发送消息这一步，后续的服务可以根据自己的能力按需处理消息，相对来说很平稳，这种现象我们可以理解为削峰。</p>
-<img    
-                       lazyload
-                       alt="image"
-                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250715165911270.2a5e3f2dou.webp"
-                         alt="image-20250715165911270" 
-                 >
-
-<hr>
-<h1 id="MQ"><a href="#MQ" class="headerlink" title="MQ"></a>MQ</h1><p>综上来看，MQ的本质就是一个阻塞队列， 只不过它在阻塞队列的基础上增加了重试, 消息持久化等等功能.。</p>
-<p>那它有什么优缺点呢？</p>
-<p>我们用去咖啡店买咖啡为例，如果是采用同步通讯的方法去买咖啡，我们给咖啡馆店员点餐后，我们还需要站在柜台等待他把咖啡做完，然后下一位顾客才可以进行点单，整个一条队伍把咖啡都买完的时间非常久。</p>
+<p>这样唯一id的生成就搞定了。</p>
+<h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><p>总结如下：</p>
+<table>
+<thead>
+<tr>
+<th>比较项</th>
+<th>使用唯一 ID（Redis 去重）</th>
+<th>数据库唯一约束</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>核心机制</td>
+<td>判断消息 ID 是否存在于 Redis</td>
+<td>利用数据库插入唯一值是否成功</td>
+</tr>
+<tr>
+<td>幂等性实现方式</td>
+<td>内存缓存去重</td>
+<td>主键&#x2F;唯一索引去重</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>高性能，适合高并发场景</td>
+<td>有 IO 开销，适合稳定场景</td>
+</tr>
+<tr>
+<td>数据可追溯</td>
+<td>不可查历史</td>
+<td>可查历史处理记录</td>
+</tr>
+<tr>
+<td>存储压力</td>
+<td>小（可设置过期）</td>
+<td>大（需定期清理）</td>
+</tr>
+<tr>
+<td>事务一致性</td>
+<td>Redis 与业务逻辑分离</td>
+<td>可与业务逻辑在同一事务</td>
+</tr>
+<tr>
+<td>风险容错</td>
+<td>Redis 宕机可能丢幂等状态</td>
+<td>数据库更稳定</td>
+</tr>
+</tbody></table>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>实现消息的幂等性，我们可以有两种策略：</p>
 <ol>
-<li>异步</li>
+<li>使用<strong>数据库的唯一约束</strong>实现，从MQ中拿到消息是要将数据插入数据库，这个过程中可以把<strong>证明消息唯一的id设置为数据库的唯一约束</strong>；同样的数据插入数据库时，如果这个唯一约束已经存在，那就无法进行，如果时第一次，就可以顺利插入，从而实现了消息的幂等性。</li>
+<li>使用<strong>消息唯一id搭配redis</strong>，生产者每次发送消息时，生成一个全局唯一id；执行业务逻辑之前，我们都<strong>先查看redis中是否存在</strong>有这个唯一id；如果有，证明业务逻辑已经执行过，跳过不执行，反之执行，即可。</li>
 </ol>
-<p>如果我们在其中运用MQ的思维，在吧台准备一个自动点餐机，用户可以在上面自行点餐，然后生成一张小票，点完之后，用户就可以走了，不用等待店员把咖啡做好，而咖啡馆店员也不用在吧台等别人来点餐，他只需要在后台备料，等有订单了，再去着手做咖啡。这就是异步。</p>
-<ol start="2">
-<li>解耦</li>
-</ol>
-<p>在点单过后，店员就着手于做咖啡，而顾客也不用站在队伍里等候，顾客可以去上厕所，可以去买早餐，这就达到了解耦的目的。</p>
-<ol start="3">
-<li>削峰</li>
-</ol>
-<p>在人流量很大的时候，比如早高峰，很多人都需要购买咖啡，然后不同的店员做咖啡的效率不一样，每个顾客点的咖啡做的难度也不一样，店员谁有空谁就去做下一杯，就可以避免一个店员过载导致的等待时间过长，这就是削峰。</p>
-<p>虽然有很多优点，但是这种模式下也会有缺点。</p>
-<ol>
-<li>可用性降低</li>
-</ol>
-<p>系统不同服务之间就靠一个MQ连接，如果MQ挂了，整个服务器就崩溃了（虽然不太可能）。</p>
-<ol start="2">
-<li>复杂度更高</li>
-</ol>
-<p>消息的重复出现，消息是否会失效，还有顺序问题都导致了系统复杂的更高。</p>
-<ol start="3">
-<li>数据一致性的问题</li>
-</ol>
-<p>系统中难免会发生某一个业务出现问题，就比如B,C,D三个服务都需要对同一个事务进行数据库的写入或者修改，B,C都成功了，D失败了，整个事务在数据库中的状态就不一样了，这也是需要考虑的点。</p>
 
                     
                 </div>
@@ -465,22 +455,22 @@
                 
                     <div class="post-nav border-box">
                         
-                            <div class="prev-post">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2025/07/26/RabbitMQ/"
-                                   title="RabbitMQ"
+                        
+                            <div class="next-post">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2025/07/28/%E6%AD%BB%E4%BF%A1%E4%BB%A5%E5%8F%8A%E5%BB%B6%E8%BF%9F%E6%B6%88%E6%81%AF/"
+                                   title="死信以及延迟消息"
                                 >
-                                    <span class="left arrow-icon flex-center">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">RabbitMQ</span>
-                                        <span class="post-nav-item">Prev posts</span>
+                                        <span class="post-nav-title-item text-ellipsis">死信以及延迟消息</span>
+                                        <span class="post-nav-item">Next posts</span>
+                                    </span>
+                                    <span class="right arrow-icon flex-center">
+                                        <i class="fas fa-chevron-right"></i>
                                     </span>
                                 </a>
                             </div>
-                        
                         
                     </div>
                 
@@ -501,7 +491,7 @@
             <div class="pc-post-toc right-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5-%E5%BC%82%E6%AD%A5%E9%80%9A%E8%AE%AF"><span class="nav-text">同步&#x2F;异步通讯</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E8%B0%83%E7%94%A8"><span class="nav-text">同步调用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8"><span class="nav-text">异步调用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MQ"><span class="nav-text">MQ</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B9%82%E7%AD%89%E6%80%A7%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-text">幂等性是什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BF%9D%E8%AF%81%E5%B9%82%E7%AD%89%E6%80%A7"><span class="nav-text">为什么要保证幂等性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E5%B9%82%E7%AD%89%E6%80%A7"><span class="nav-text">如何保证幂等性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%94%AF%E4%B8%80%E7%BA%A6%E6%9D%9F"><span class="nav-text">数据库唯一约束</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E5%94%AF%E4%B8%80id"><span class="nav-text">消息唯一id</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E8%80%85%E7%9A%84%E5%85%B1%E6%80%A7%E5%8F%8A%E5%8C%BA%E5%88%AB"><span class="nav-text">二者的共性及区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E6%80%A7"><span class="nav-text">共性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB"><span class="nav-text">区别</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol>
     </div>
 </div>
 
@@ -684,7 +674,7 @@
             <div class="tablet-post-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5-%E5%BC%82%E6%AD%A5%E9%80%9A%E8%AE%AF"><span class="nav-text">同步&#x2F;异步通讯</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E8%B0%83%E7%94%A8"><span class="nav-text">同步调用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E8%B0%83%E7%94%A8"><span class="nav-text">异步调用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MQ"><span class="nav-text">MQ</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B9%82%E7%AD%89%E6%80%A7%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-text">幂等性是什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BF%9D%E8%AF%81%E5%B9%82%E7%AD%89%E6%80%A7"><span class="nav-text">为什么要保证幂等性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E5%B9%82%E7%AD%89%E6%80%A7"><span class="nav-text">如何保证幂等性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%94%AF%E4%B8%80%E7%BA%A6%E6%9D%9F"><span class="nav-text">数据库唯一约束</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E5%94%AF%E4%B8%80id"><span class="nav-text">消息唯一id</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E8%80%85%E7%9A%84%E5%85%B1%E6%80%A7%E5%8F%8A%E5%8C%BA%E5%88%AB"><span class="nav-text">二者的共性及区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E6%80%A7"><span class="nav-text">共性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB"><span class="nav-text">区别</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol>
     </div>
 </div>
 
