@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="T00">
+    
+    <title>
+        
+            消息的可靠性 |
+        
+        Keeping T00
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="shortcut icon" href="/images/logo.svg">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/regular.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/solid.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/brands.min.css">
+    
+    <script class="keep-theme-configurations">
+    const KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"}
+    KEEP.theme_config = {"base_info":{"primary_color":"#0066cc","title":"Keeping T00","author":"T00","avatar":"/images/avatar.svg","logo":"/images/logo.svg","favicon":"/images/logo.svg"},"menu":{"home":"/","archives":"/archives","categories":"/categories","links":"/links"},"first_screen":{"enable":true,"background_img":"/images/bg.svg","background_img_dark":"/images/bg.svg","description":"Keep writing and Keep loving.","hitokoto":false},"social_contact":{"enable":false,"links":{"github":null,"weixin":null,"qq":null,"weibo":null,"zhihu":null,"twitter":null,"x":null,"facebook":null,"email":null}},"scroll":{"progress_bar":true,"percent":true,"hide_header":true},"home":{"announcement":null,"category":false,"tag":false,"post_datetime":"updated"},"post":{"author_badge":{"enable":true,"level_badge":true,"custom_badge":["One","Two","Three"]},"word_count":{"wordcount":true,"min2read":false},"datetime_format":"YYYY-MM-DD HH:mm:ss","copyright_info":false,"share":false,"reward":{"enable":false,"img_link":null,"text":null,"icon":null}},"code_block":{"tools":{"enable":true,"style":"default"},"highlight_theme":"obsidian"},"toc":{"enable":true,"number":false,"expand_all":false,"init_open":true,"layout":"right"},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"local_search":{"enable":true,"preload":true},"comment":{"enable":false,"use":"valine","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.39"},"waline":{"server_url":null,"reaction":false,"version":"3.3.2"},"giscus":{"repo":null,"repo_id":null,"category":"Announcements","category_id":null,"reactions_enabled":false},"artalk":{"server":null},"disqus":{"shortname":null}},"rss":{"enable":false},"lazyload":{"enable":true},"cdn":{"enable":true,"provider":"cdnjs"},"pjax":{"enable":true},"footer":{"since":2025,"word_count":true,"site_deploy":{"enable":false,"provider":"github","url":null},"record":{"enable":false,"list":[{"code":null,"link":null}]}},"inject":{"enable":false,"css":[null],"js":[null]},"root":"","source_data":{},"version":"4.2.5"}
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"}
+    KEEP.language_code_block = {"copy":"Copy code","copied":"Copied","fold":"Fold code block","folded":"Folded"}
+    KEEP.language_copy_copyright = {"copy":"Copy copyright info","copied":"Copied","title":"Original post title","author":"Original post author","link":"Original post link"}
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <i class="pjax-progress-icon fas fa-circle-notch fa-spin"></i>
+    
+</div>
+
+
+
+<main class="page-container border-box">
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="border-box header-content">
+        <div class="left flex-start border-box">
+            
+                <a class="logo-image border-box" href="/">
+                    <img src="/images/logo.svg">
+                </a>
+            
+            <a class="site-name border-box" href="/">
+               Keeping T00
+            </a>
+        </div>
+
+        <div class="right border-box">
+            <div class="pc border-box">
+                <ul class="menu-list border-box">
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/">
+                                
+                                HOME
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/archives">
+                                
+                                ARCHIVES
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/categories">
+                                
+                                CATEGORIES
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/links">
+                                
+                                LINKS
+                                
+                            </a>
+                            
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="menu-text-color fas search fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile border-box flex-start">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list border-box">
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/">
+                            
+                            HOME
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/archives">
+                            
+                            ARCHIVES
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/categories">
+                            
+                            CATEGORIES
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/links">
+                            
+                            LINKS
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+                
+
+                    
+<div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+        <div class="post-content-container border-box">
+            
+
+            <div class="post-content-bottom border-box">
+                
+                    <div class="post-title">
+                        消息的可靠性
+                    </div>
+                
+
+                
+                    <div class="post-header border-box">
+                        
+                            <div class="avatar-box border-box">
+                                <img src="/images/avatar.svg">
+                            </div>
+                        
+                        <div class="info-box">
+                            <div class="author border-box">
+                                <span class="name">T00</span>
+                                
+                                    <span class="author-badge">Lv1</span>
+                                
+                            </div>
+                            <div class="meta-info border-box">
+                                
+
+<div class="post-meta-info-container border-box post">
+    <div class="post-meta-info border-box">
+        
+
+        
+            <span class="meta-info-item post-create-date">
+                <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
+                <span class="datetime">2025-07-27 14:23:05</span>
+            </span>
+
+            
+                <span class="meta-info-item post-update-date">
+                    <i class="icon fa-solid fa-file-pen"></i>&nbsp;
+                    <span class="datetime" data-updated="Mon Jul 28 2025 16:10:52 GMT+0800">2025-07-28 16:10:52</span>
+                </span>
+            
+        
+
+        
+
+        
+
+        
+        
+            <span class="meta-info-item post-wordcount">
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>4.5k Words</span>
+            </span>
+        
+        
+        
+            <span class="meta-info-item post-pv">
+                <i class="icon fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    </div>
+
+    
+</div>
+
+                            </div>
+                        </div>
+                    </div>
+                
+
+                <div class="post-content keep-markdown-body ">
+                    
+
+                    
+                         <h1 id="消息丢失"><a href="#消息丢失" class="headerlink" title="消息丢失"></a>消息丢失</h1><p>消息从发送者发送消息，到消费者处理消息，需要经过的流程是这样的：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image.2h8m09udhe.webp"
+                         alt="image" 
+                 >
+
+<p>消息从生产者到消费者的每一步都可能导致消息丢失：</p>
+<ol>
+<li>发送消息时消息丢失<ul>
+<li>生产者发送消息到交换机时</li>
+<li>交换机把消息发送给队列时</li>
+</ul>
+</li>
+<li>MQ导致消息丢失<ul>
+<li>消息<strong>没来得及发送给消费者</strong>就消失了</li>
+</ul>
+</li>
+<li>消费者拿到消息后未消费导致消息丢失<ul>
+<li>消费者拿到消息<strong>没来得及消费</strong>就消失了</li>
+</ul>
+</li>
+</ol>
+<h1 id="消息的可靠性"><a href="#消息的可靠性" class="headerlink" title="消息的可靠性"></a>消息的可靠性</h1><p>综上，我们要解决消息丢失问题，保证MQ的可靠性，就必须从3个方面入手：</p>
+<ul>
+<li>确保生产者一定把消息发送到MQ</li>
+<li>确保MQ不会将消息弄丢</li>
+<li>确保消费者一定要处理消息</li>
+</ul>
+<h2 id="生产者的可靠性"><a href="#生产者的可靠性" class="headerlink" title="生产者的可靠性"></a>生产者的可靠性</h2><h3 id="生产者确认"><a href="#生产者确认" class="headerlink" title="生产者确认"></a>生产者确认</h3><p>生产者在向交换机传输消息时，有可能消息<strong>根本无法到达交换机</strong>，或者到<strong>达交换机后</strong>没有<strong>成功的将消息传递给队列</strong>，所以MQ针对这两点分别做出了保障，我们称之为生产者的确认。</p>
+<h4 id="Confirm模式：确保消息送达交换机"><a href="#Confirm模式：确保消息送达交换机" class="headerlink" title="Confirm模式：确保消息送达交换机"></a>Confirm模式：确保消息送达交换机</h4><p>当消息成功到达 RabbitMQ 的交换机（Exchange）时，RabbitMQ 就会返回 <code>ack </code>投递失败返回<code>nack</code>。</p>
+<p>想要开启confirm模式也很简单，在publisher模块的<code>application.yaml</code>中添加配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">rabbitmq:</span></span><br><span class="line">    <span class="attr">publisher-confirm-type:</span> <span class="string">correlated</span> <span class="comment"># 开启publisher confirm机制，并设置confirm类型</span></span><br></pre></td></tr></table></figure>
+
+<p>这里<code>publisher-confirm-type</code>有三种模式可选：</p>
+<ul>
+<li><code>none</code>：关闭confirm机制</li>
+<li><code>simple</code>：同步阻塞等待MQ的回执（等信息返回了再执行其他操作）</li>
+<li><code>correlated</code>：MQ异步回调返回回执（发完消息直接做其他事情，有消息回调回来再进行处理）</li>
+</ul>
+<h4 id="Return回退机制：确保消息路由成功"><a href="#Return回退机制：确保消息路由成功" class="headerlink" title="Return回退机制：确保消息路由成功"></a>Return回退机制：确保消息路由成功</h4><p>在消息到达Exchange过后，MQ会返回<code>ack</code>，但是这并不代表消息就可以成功发送给队列，因此还需要一层return机制来保证：确保消息成功从交换机路由到目标队列，未路由的消息能被回退感知。</p>
+<p>想要开启confirm模式也很简单，在publisher模块的<code>application.yaml</code>中添加配置：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  rabbitmq:</span><br><span class="line">    publisher-confirm-type: correlated  # 启用 confirm 机制</span><br><span class="line">    publisher-returns: <span class="literal">true</span>            # 启用 <span class="keyword">return</span> 回调（还需 mandatory 才生效）</span><br><span class="line">    template:</span><br><span class="line">      mandatory: <span class="literal">true</span>                  # 配合 <span class="keyword">return</span> 生效，消息未路由才触发回调，默认<span class="literal">false</span>会在失败后直接丢弃消息</span><br></pre></td></tr></table></figure>
+
+<h4 id="生产者确认机制的实现"><a href="#生产者确认机制的实现" class="headerlink" title="生产者确认机制的实现"></a>生产者确认机制的实现</h4><p>经过梳理整个生产者确认机制如下图：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/f3312dcd8a39c010379953a3fd3f4103.83acfiz4li.webp"
+                         alt="f3312dcd8a39c010379953a3fd3f4103" 
+                 >
+
+<p>我们现在来实现一下：</p>
+<ol>
+<li>配置publisher模块的<code>application.yaml</code></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  rabbitmq:</span><br><span class="line">    publisher-confirm-type: correlated  # 启用 confirm 机制</span><br><span class="line">    publisher-returns: <span class="literal">true</span>            # 启用 <span class="keyword">return</span> 回调（还需 mandatory 才生效）</span><br><span class="line">    template:</span><br><span class="line">      mandatory: <span class="literal">true</span>                  # 配合 <span class="keyword">return</span> 生效，消息未路由才触发回调</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>配置<code>ConfirmCallback</code></li>
+</ol>
+<p>由于每个消息发送时的处理逻辑不一定相同，因此ConfirmCallback需要在每次发消息时定义。具体来说，是在调用RabbitTemplate中的convertAndSend方法时，多传递一个参数：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250717153645745.8vn7ug6fpa.webp"
+                         alt="image-20250717153645745" 
+                 >
+
+<p>这里的CorrelationData中包含两个核心的东西：</p>
+<ul>
+<li><code>id</code>：消息的唯一标示，MQ对不同的消息的回执以此做判断，避免混淆</li>
+<li><code>SettableListenableFuture</code>：回执结果的Future对象</li>
+</ul>
+<p>将来MQ的回执就会通过这个<code>Future</code>来返回，我们可以提前给<code>CorrelationData</code>中的<code>Future</code>添加回调函数来处理消息回执：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250717153803086.icf8ij0u6.webp"
+                         alt="image-20250717153803086" 
+                 >
+
+<ol start="3">
+<li>配置<code>ReturnCallback</code></li>
+</ol>
+<p>每个<code>RabbitTemplate</code>只能配置一个<code>ReturnCallback</code>，因此我们可以在配置类中统一设置，是一种初始化的操作，我们可以使用<code>@PostConstruct</code>来实现。</p>
+<p>（<strong>@PostConstruct</strong> 是 Java 中的一个注解，常用于标记方法，使其在对象实例化并完成依赖注入后立即执行。它通常用于初始化逻辑，例如加载配置、建立连接等。）</p>
+<p>我们建立一个<code>MqReturnConfig</code>配置类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MqReturnConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> RabbitTemplate rabbitTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostConstruct</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">()</span>&#123;</span><br><span class="line">        rabbitTemplate.setReturnsCallback(<span class="keyword">new</span> <span class="title class_">RabbitTemplate</span>.ReturnsCallback() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">returnedMessage</span><span class="params">(ReturnedMessage returned)</span> &#123;</span><br><span class="line">                log.debug(<span class="string">&quot;exchange: &#123;&#125;&quot;</span>, returned.getExchange());</span><br><span class="line">                log.debug(<span class="string">&quot;routingKey: &#123;&#125;&quot;</span>, returned.getRoutingKey());</span><br><span class="line">                log.debug(<span class="string">&quot;message: &#123;&#125;&quot;</span>, returned.getMessage());</span><br><span class="line">                log.debug(<span class="string">&quot;replyCode: &#123;&#125;&quot;</span>, returned.getReplyCode());</span><br><span class="line">                log.debug(<span class="string">&quot;replyText: &#123;&#125;&quot;</span>, returned.getReplyText());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>发送消息及配置<code>confirm</code></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testConfigCallback</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">    <span class="comment">//1.创建cd</span></span><br><span class="line">    <span class="type">CorrelationData</span> <span class="variable">cd</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CorrelationData</span>(UUID.randomUUID().toString());</span><br><span class="line">    <span class="comment">//2.添加confirm callback</span></span><br><span class="line">    cd.getFuture().addCallback(<span class="keyword">new</span> <span class="title class_">ListenableFutureCallback</span>&lt;CorrelationData.Confirm&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onSuccess</span><span class="params">(CorrelationData.Confirm result)</span> &#123;</span><br><span class="line">            log.debug(<span class="string">&quot;收到confirm callback回执&quot;</span>);</span><br><span class="line">            <span class="keyword">if</span>(result.isAck())&#123;</span><br><span class="line">                <span class="comment">// 消息发送成功</span></span><br><span class="line">                log.debug(<span class="string">&quot;消息发送成功，收到ack&quot;</span>);</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                log.error(<span class="string">&quot;消息发送失败，收到nack,原因：&#123;&#125;&quot;</span> ,result.getReason());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onFailure</span><span class="params">(Throwable ex)</span> &#123;</span><br><span class="line">            log.error(<span class="string">&quot;消息回调失败&quot;</span>,ex);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">   rabbitTemplate.convertAndSend(<span class="string">&quot;T00.direct&quot;</span>,<span class="string">&quot;red&quot;</span>,<span class="string">&quot;hello&quot;</span>,cd);</span><br><span class="line"></span><br><span class="line">    Thread.sleep(<span class="number">2000</span>);  <span class="comment">//因为需要等待消息发出才能得到回调</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li><p>运行</p>
+<ol>
+<li>所有信息均正确时，返回了ack：</li>
+</ol>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250717153803086.icf8ij0u6.webp"
+                         alt="image-20250717153803086" 
+                 >
+
+<ol start="2">
+<li>当路由key不正确时，也返回了ack并且返回了我们编写的<code>ReturnCallback</code>配置类（到达交换机，但没有成功路由）：</li>
+</ol>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250717153803086.icf8ij0u6.webp"
+                         alt="image-20250717153803086" 
+                 >
+
+<ol start="3">
+<li>当无法连接到时，也就是没有正常到达交换机时，返回了nack，同时给出了原因：</li>
+</ol>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250717154033163.175osj6jun.webp"
+                         alt="image-20250717154033163" 
+                 ></li>
+</ol>
+<hr>
+<h3 id="连接可靠性：生产者自动重连机制"><a href="#连接可靠性：生产者自动重连机制" class="headerlink" title="连接可靠性：生产者自动重连机制"></a>连接可靠性：生产者自动重连机制</h3><p>我们不难想到生产者发送消息时，可能会出现网络故障，导致与MQ的连接中断，这样也会导致消息的丢失。</p>
+<p>为了解决这个问题，SpringAMQP提供的消息发送时的重试机制。即：当<code>RabbitTemplate</code>与MQ连接超时后，多次重试。</p>
+<p>修改<code>publisher</code>模块的<code>application.yaml</code>文件，添加下面的内容：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">rabbitmq:</span></span><br><span class="line">    <span class="attr">connection-timeout:</span> <span class="string">1s</span> <span class="comment"># 设置MQ的连接超时时间</span></span><br><span class="line">    <span class="attr">template:</span></span><br><span class="line">      <span class="attr">retry:</span></span><br><span class="line">        <span class="attr">enabled:</span> <span class="literal">true</span> <span class="comment"># 开启超时重试机制</span></span><br><span class="line">        <span class="attr">initial-interval:</span> <span class="string">1000ms</span> <span class="comment"># 失败后的初始等待时间</span></span><br><span class="line">        <span class="attr">multiplier:</span> <span class="number">1</span> <span class="comment"># 失败后下次的等待时长倍数，下次等待时长 = initial-interval * multiplier</span></span><br><span class="line">        <span class="attr">max-attempts:</span> <span class="number">3</span> <span class="comment"># 最大重试次数</span></span><br></pre></td></tr></table></figure>
+
+<p>也可以看见它的默认值和上面是一样的。</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250717134239885.7axguz988o.webp"
+                         alt="image-20250717134239885" 
+                 >
+
+<p>我们利用命令停掉RabbitMQ服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop mq</span><br></pre></td></tr></table></figure>
+
+<p>然后测试发送一条消息，会发现会每隔1秒重试1次，（发送1s发现发送失败，再间隔1s重试，所以两次发送时间间隔2s）总共重试了3次。消息发送的超时重试机制配置成功了！</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250717134639987.7zqqezwr95.webp"
+                         alt="image-20250717134639987" 
+                 >
+
+<p>注意：</p>
+<ul>
+<li>这个重试是<strong>连接时的重试</strong>，如果是在消息发送抛出异常时，他是不会充实的。</li>
+<li>当网络不稳定的时候，利用重试机制可以有效提高消息发送的成功率。不过SpringAMQP提供的重试机制是<strong>阻塞式</strong>的重试，也就是说多次重试等待的过程中，当前线程是被阻塞的。</li>
+<li>如果对于业务性能有要求，建议禁用重试机制。如果一定要使用，请合理配置等待时长和重试次数，当然也可以考虑使用异步线程来执行发送消息的代码。</li>
+</ul>
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>为了保证消息在发送的过程中是稳定的，我们采用了生产者确认的方式，</p>
+<p>所谓生产者确认就是使用confirm机制和return回退机制保证消息可以稳定到达队列当中；</p>
+<p>confirm机制可以通过修改配置文件来生效，它会在消息成功投递到交换机之后返回<code>ack</code>来告知我们它是否到达交换机，如果没有则返回<code>nack</code>；</p>
+<p>return回退机制是发生在消息成功投递到交换机之后，这时也会返回<code>ack</code>，但是他将消息路由到队列的过程中可能会失败，这时我们如果还配置了mandatory为ture，MQ就会将消息回调给生产者，否则会直接丢弃这条消息；</p>
+<p>最后我们还可以通过配置confirmcallback和returncallback来设置我们在不同情况下该做什么。</p>
+<hr>
+<h2 id="消息持久化"><a href="#消息持久化" class="headerlink" title="消息持久化"></a>消息持久化</h2><p>为了保证消息在传输的过程中是稳定的，我们需要配置消息持久化，所谓持久化其实就是将MQ存储在内存中的消息写到磁盘上面。</p>
+<p>内存空间有限，当消费者故障或者处理过慢时，会导致消息积压，引发MQ阻塞（mq内存满了之后，会做一个PageOut操作将一些较老的消息转移到磁盘上，这个期间，消息时阻塞的，不能执行其他操作）我们来验证一下，将一条消息发100w次：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testPageOut</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">Message</span> <span class="variable">msg</span> <span class="operator">=</span> MessageBuilder</span><br><span class="line">            .withBody(<span class="string">&quot;101&quot;</span>.getBytes(StandardCharsets.UTF_8))</span><br><span class="line">            .setDeliveryMode(MessageDeliveryMode.NON_PERSISTENT)</span><br><span class="line">            .build();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">1000000</span>; i++) &#123;</span><br><span class="line">        rabbitTemplate.convertAndSend(<span class="string">&quot;simple.queue&quot;</span>,msg);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看见速率出现了明显的低谷，pageout的消息数量也巨大</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250717161442012.26ls5p9b0j.webp"
+                         alt="image-20250717161442012" 
+                 >
+
+<p>所以实现数据持久化是很有必要的，包括：</p>
+<ul>
+<li>交换机持久化</li>
+<li>队列持久化</li>
+<li>消息持久化</li>
+</ul>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>队列和交换机持久化，都是将<code>Durable</code>设置为<code>true</code>即可；</p>
+<p>消息持久化是在发送消息时附带值为<code>Persistent</code>的<code>properties</code>：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250717160222837.7axguz988y.webp"
+                         alt="image-20250717160222837" 
+                 >
+
+<ul>
+<li>持久化的消息在mq重启后，消息依旧在</li>
+</ul>
+<p>与上面非持久化的消息相比，没有了太大的速率下跌，没有pageout，但是似乎还是不太理想。</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250717161730430.9gwvgr0w04.webp"
+                         alt="image-20250717161730430" 
+                 >
+
+<h3 id="LazyQueue"><a href="#LazyQueue" class="headerlink" title="LazyQueue"></a>LazyQueue</h3><p>从RabbitMQ的3.6.0版本开始，就增加了Lazy Queues的模式，也就是惰性队列。惰性队列的特征如下：</p>
+<ul>
+<li>接收到消息后直接存入磁盘而非内存</li>
+<li>消费者要消费消息时才会从磁盘中读取并加载到内存（也就是懒加载）</li>
+<li>支持数百万条的消息存储</li>
+</ul>
+<p>而在3.12版本之后，LazyQueue已经成为所有队列的默认格式。因此官方推荐升级MQ为3.12版本或者所有队列都设置为LazyQueue模式。</p>
+<h4 id="控制台配置"><a href="#控制台配置" class="headerlink" title="控制台配置"></a>控制台配置</h4><h4 id="代码配置"><a href="#代码配置" class="headerlink" title="代码配置"></a>代码配置</h4><ol>
+<li>添加<code>x-queue-mod=lazy</code>参数也可设置队列为Lazy模式：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> Queue <span class="title function_">lazyQueue</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> QueueBuilder</span><br><span class="line">            .durable(<span class="string">&quot;lazy.queue&quot;</span>)</span><br><span class="line">            .lazy() <span class="comment">// 开启Lazy模式</span></span><br><span class="line">            .build();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>当然，我们也可以基于<strong>注解</strong>来声明队列并设置为Lazy模式：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RabbitListener(queuesToDeclare = @Queue(</span></span><br><span class="line"><span class="meta">        name = &quot;lazy.queue&quot;,</span></span><br><span class="line"><span class="meta">        durable = &quot;true&quot;,</span></span><br><span class="line"><span class="meta">        arguments = @Argument(name = &quot;x-queue-mode&quot;, value = &quot;lazy&quot;)</span></span><br><span class="line"><span class="meta">))</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listenLazyQueue</span><span class="params">(String msg)</span>&#123;</span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试一遍发现速率 基本一直处于峰值，而且没有在内存中（没有消费者接收这个消息）。</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250717162716387.lw168c3k6.webp"
+                         alt="image-20250717162716387" 
+                 >
+
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>为了保证消息的持久化，我们要将队列，交换机均设置为持久化的，发出的消息也要是持久化消息，这样就算mq挂了，消息被持久化到了硬盘上，也不会消失。</p>
+<hr>
+<h2 id="消费者的可靠性"><a href="#消费者的可靠性" class="headerlink" title="消费者的可靠性"></a>消费者的可靠性</h2><p>同生产者一样，消费者也需要有确认机制来保证消息能被正常消费。</p>
+<h3 id="消费者确认"><a href="#消费者确认" class="headerlink" title="消费者确认"></a>消费者确认</h3><p>为了确认消费者是否成功处理消息，RabbitMQ提供了消费者确认机制。即：当消费者处理消息结束后，应该向RabbitMQ发送一个回执，告知RabbitMQ自己消息处理状态。回执有三种可选值：</p>
+<ul>
+<li>ack：成功处理消息，RabbitMQ从队列中删除该消息</li>
+<li>nack：消息处理失败，RabbitMQ需要再次投递消息</li>
+<li>reject：消息处理失败并拒绝该消息，RabbitMQ从队列中删除该消息</li>
+</ul>
+<p><strong>SpringAMQP</strong>帮我们实现了消息确认。并允许我们通过配置文件设置ACK处理方式，有三种模式：</p>
+<ul>
+<li><code>none</code>：不处理。即消息投递给消费者后立刻ack，消息会立刻从MQ删除。非常不安全，不建议使用</li>
+<li><code>manual</code>：手动模式。需要自己在业务代码中调用api，发送<code>ack</code>或<code>reject</code>，存在业务入侵，但更灵活</li>
+<li><code>auto</code>：自动模式。SpringAMQP利用AOP对我们的消息处理逻辑做了环绕增强，当业务正常执行时则自动返回<code>ack</code>.  当业务出现异常时，根据异常判断返回不同结果：<ul>
+<li>如果是<strong>业务异常</strong>，会自动返回<code>nack</code>；</li>
+<li>如果是<strong>消息处理或校验异常</strong>，自动返回<code>reject</code>;</li>
+</ul>
+</li>
+</ul>
+<h4 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h4><p>通过下面的配置可以修改SpringAMQP的ACK处理方式：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">rabbitmq:</span></span><br><span class="line">    <span class="attr">listener:</span></span><br><span class="line">      <span class="attr">simple:</span></span><br><span class="line">        <span class="attr">acknowledge-mode:</span> <span class="string">none</span> <span class="comment"># 不做处理</span></span><br></pre></td></tr></table></figure>
+
+<p>修改consumer服务的SpringRabbitListener类中的方法，模拟一个消息处理的异常：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RabbitListener(queues = &quot;simple.queue&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listenSimpleQueueMessage</span><span class="params">(String msg)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">      log.info(<span class="string">&quot;消费者接收到消息：&quot;</span> + msg );</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">MessageConversionException</span>(<span class="string">&quot;故意的&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试可以发现：当消息处理发生异常时，消息依然被RabbitMQ删除了。</p>
+<p>我们再次把确认机制修改为auto：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">rabbitmq:</span></span><br><span class="line">    <span class="attr">listener:</span></span><br><span class="line">      <span class="attr">simple:</span></span><br><span class="line">        <span class="attr">acknowledge-mode:</span> <span class="string">auto</span> <span class="comment"># 自动ack</span></span><br></pre></td></tr></table></figure>
+
+<p>在异常位置打断点，再次发送消息，程序卡在断点时，可以发现此时消息状态为<code>unacked</code>（未确定状态）：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250717164758994.5xaxqxy687.webp"
+                         alt="image-20250717164758994" 
+                 >
+
+<ul>
+<li>消费者处理消息后可以向MQ发 送ack回执，MQ收到ack回执后才会删除该消息。</li>
+</ul>
+<p>但是当消费者出现异常后，消息会不断requeue（重入队）到队列，再重新发送给消费者。如果消费者再次执行依然出错，消息会再次requeue到队列，再次投递，直到消息处理成功为止。</p>
+<p>极端情况就是消费者一直无法执行成功，那么消息requeue就会无限循环，导致mq的消息处理飙升，带来不必要的压力，我们刚刚在验证auto模式时，就发现了一条消息也可以达到惊人的数据流量。</p>
+<p>为了应对上述情况Spring又提供了消费者失败重试机制：在消费者出现异常时利用本地重试，而不是无限制的requeue到mq队列。</p>
+<h3 id="消费失败重试"><a href="#消费失败重试" class="headerlink" title="消费失败重试"></a>消费失败重试</h3><p>修改consumer服务的application.yml文件，添加内容：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">rabbitmq:</span></span><br><span class="line">    <span class="attr">listener:</span></span><br><span class="line">      <span class="attr">simple:</span></span><br><span class="line">        <span class="attr">retry:</span></span><br><span class="line">          <span class="attr">enabled:</span> <span class="literal">true</span> <span class="comment"># 开启消费者失败重试</span></span><br><span class="line">          <span class="attr">initial-interval:</span> <span class="string">1000ms</span> <span class="comment"># 初识的失败等待时长为1秒</span></span><br><span class="line">          <span class="attr">multiplier:</span> <span class="number">1</span> <span class="comment"># 失败的等待时长倍数，下次等待时长 = multiplier * last-interval</span></span><br><span class="line">          <span class="attr">max-attempts:</span> <span class="number">3</span> <span class="comment"># 最大重试次数</span></span><br><span class="line">          <span class="attr">stateless:</span> <span class="literal">true</span> <span class="comment"># true无状态；false有状态。如果业务中包含事务，这里改为false</span></span><br></pre></td></tr></table></figure>
+
+<p>重启consumer服务，重复之前的测试。可以发现：</p>
+<ul>
+<li>消费者在失败后消息没有重新回到MQ无限重新投递，而是在本地重试了3次</li>
+<li>本地重试3次以后，抛出了<code>AmqpRejectAndDontRequeueException</code>异常。查看RabbitMQ控制台，发现消息被删除了，说明最后SpringAMQP返回的是<code>reject</code></li>
+</ul>
+<p>结论：</p>
+<ul>
+<li>开启本地重试时，消息处理过程中抛出异常，不会requeue到队列，而是在消费者本地重试</li>
+<li>重试达到最大次数后，Spring会返回reject，消息会被丢弃</li>
+</ul>
+<hr>
+<h3 id="异常交换机-队列"><a href="#异常交换机-队列" class="headerlink" title="异常交换机&#x2F;队列"></a>异常交换机&#x2F;队列</h3><p>本地测试达到最大重试次数后，消息会被丢弃。这在某些对于消息可靠性要求较高的业务场景下，显然不太合适了。<br>因此Spring允许我们自定义重试次数耗尽后的消息处理策略，这个策略是由<code>MessageRecovery</code>接口来定义的，它有3个不同实现：</p>
+<ul>
+<li><code>RejectAndDontRequeueRecoverer</code>：重试耗尽后，直接<code>reject</code>，丢弃消息。默认就是这种方式 </li>
+<li><code>ImmediateRequeueMessageRecoverer</code>：重试耗尽后，返回<code>nack</code>，消息重新入队 </li>
+<li><code>RepublishMessageRecoverer</code>：重试耗尽后，将失败消息投递到指定的交换机</li>
+</ul>
+<p>比较优雅的一种处理方案是<code>RepublishMessageRecoverer</code>，失败后将消息投递到一个<strong>指定的，专门存放异常消息的队列</strong>，后续由人工集中处理。</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250717171809684.mdjxhn9k.webp"
+                         alt="image-20250717171809684" 
+                 >
+
+<ol>
+<li>在consumer服务中定义处理失败消息的交换机和队列</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> DirectExchange <span class="title function_">errorMessageExchange</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">DirectExchange</span>(<span class="string">&quot;error.direct&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> Queue <span class="title function_">errorQueue</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Queue</span>(<span class="string">&quot;error.queue&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> Binding <span class="title function_">errorBinding</span><span class="params">(Queue errorQueue, DirectExchange errorMessageExchange)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> BindingBuilder.bind(errorQueue).to(errorMessageExchange).with(<span class="string">&quot;error&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>定义一个RepublishMessageRecoverer，关联队列和交换机</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> MessageRecoverer <span class="title function_">republishMessageRecoverer</span><span class="params">(RabbitTemplate rabbitTemplate)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">RepublishMessageRecoverer</span>(rabbitTemplate, <span class="string">&quot;error.direct&quot;</span>, <span class="string">&quot;error&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>运行</li>
+</ol>
+<p>最后可以看见，在接收三次消息之后，它将消息发给了<code>error.queue</code>里面还附带了全部的异常信息</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250717173100204.1ovqh47xfv.webp"
+                         alt="image-20250717173100204" 
+                 >
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-RabbitMQ/image-20250717173045908.5trbt853ij.webp"
+                         alt="image-20250717173045908" 
+                 >
+
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>为了保证消费者的可靠性，首先我们通过消费者确认机制，消费者返回ack时，mq将消息删除；</p>
+<p>返回nack时，表示消息处理异常，为例减少服务器负担，我们在此基础上增加消费者重试机制，并声明异常交换机和异常处理器，将这些消息投递并路由到其中，最后由人工统一处理。</p>
+<hr>
+<h1 id="如何保证消息的可靠性？"><a href="#如何保证消息的可靠性？" class="headerlink" title="如何保证消息的可靠性？"></a>如何保证消息的可靠性？</h1><p>消息从生产者一直到消费者被其消费的过程中，每个阶段都有可能导致消息的丢失，从而使业务异常，我们要从三个方面保证消息的可靠性：</p>
+<ol>
+<li>要保证生产者的可靠性：首先要通过confirm机制和return回调机制来实现生产者确认功能；confirm机制会在消息成功投递到交换机之后，返回<code>ack</code>，反之<code>nack</code>，来使消息投递到交换机的过程可感知化；但是消息成功投递到交换机中并不代表可以成功路由到队列上，所以还需要return回调机制来保证消息可以顺利路由到队列中；同时我们还可以定义confirmcallback和returncallback来设置不同情况下，我们应该做什么。</li>
+<li>要使消息持久化：消息持久化需要交换机，队列和消息本身都经过持久化，这样才可以把消息存储在磁盘上，即使mq挂掉，消息也不会消失。</li>
+<li>要保证消费者的可靠性：首先和生产者一样，我们使用消费者确认机制，在消息被成功消费之后返回<code>ack</code>，来通知mq这条消息可以删除，反之返回<code>nack</code>；但是为了业务的完整性，我们又使用消费者重试机制，保证消息可以被正常消费，同时又不过多占用服务器性能；在重试过后，我们可以设置一对异常处理交换器和队列，专门将重试过后但又没有被消费的消息统一管理起来，最后通过人工处理。</li>
+</ol>
+<p>至此，可以基本保证消息的可靠性。</p>
+
+                    
+                </div>
+
+                
+
+                <div class="post-bottom-tags-and-share border-box">
+                    <div>
+                        
+                    </div>
+                    <div>
+                        
+                    </div>
+                </div>
+
+                
+
+                
+                    <div class="post-nav border-box">
+                        
+                        
+                            <div class="next-post">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2025/07/26/RabbitMQ/"
+                                   title="RabbitMQ"
+                                >
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">RabbitMQ</span>
+                                        <span class="post-nav-item">Next posts</span>
+                                    </span>
+                                    <span class="right arrow-icon flex-center">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                    </div>
+                
+
+                
+                    
+
+
+
+
+
+
+                
+            </div>
+        </div>
+
+        
+            <div class="pc-post-toc right-toc">
+                <div class="post-toc-wrap border-box">
+    <div class="post-toc border-box">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E4%B8%A2%E5%A4%B1"><span class="nav-text">消息丢失</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="nav-text">消息的可靠性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="nav-text">生产者的可靠性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85%E7%A1%AE%E8%AE%A4"><span class="nav-text">生产者确认</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Confirm%E6%A8%A1%E5%BC%8F%EF%BC%9A%E7%A1%AE%E4%BF%9D%E6%B6%88%E6%81%AF%E9%80%81%E8%BE%BE%E4%BA%A4%E6%8D%A2%E6%9C%BA"><span class="nav-text">Confirm模式：确保消息送达交换机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Return%E5%9B%9E%E9%80%80%E6%9C%BA%E5%88%B6%EF%BC%9A%E7%A1%AE%E4%BF%9D%E6%B6%88%E6%81%AF%E8%B7%AF%E7%94%B1%E6%88%90%E5%8A%9F"><span class="nav-text">Return回退机制：确保消息路由成功</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85%E7%A1%AE%E8%AE%A4%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-text">生产者确认机制的实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E5%8F%AF%E9%9D%A0%E6%80%A7%EF%BC%9A%E7%94%9F%E4%BA%A7%E8%80%85%E8%87%AA%E5%8A%A8%E9%87%8D%E8%BF%9E%E6%9C%BA%E5%88%B6"><span class="nav-text">连接可靠性：生产者自动重连机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-text">消息持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-text">实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LazyQueue"><span class="nav-text">LazyQueue</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%B0%E9%85%8D%E7%BD%AE"><span class="nav-text">控制台配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E9%85%8D%E7%BD%AE"><span class="nav-text">代码配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E8%80%85%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="nav-text">消费者的可靠性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E8%80%85%E7%A1%AE%E8%AE%A4"><span class="nav-text">消费者确认</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0-1"><span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E5%A4%B1%E8%B4%A5%E9%87%8D%E8%AF%95"><span class="nav-text">消费失败重试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E4%BA%A4%E6%8D%A2%E6%9C%BA-%E9%98%9F%E5%88%97"><span class="nav-text">异常交换机&#x2F;队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-2"><span class="nav-text">总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%B6%88%E6%81%AF%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7%EF%BC%9F"><span class="nav-text">如何保证消息的可靠性？</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="copyright-info info-item">
+    &copy;&nbsp;2025
+    
+            &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">T00</a>
+        
+    </div>
+
+    <div class="theme-info info-item">
+        Powered by&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;&&nbsp;Theme&nbsp;<a class="keep-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep</a>
+    </div>
+
+    
+
+    
+        <div class="count-info info-item">
+            
+                <span class="count-item border-box word">
+                    <span class="item-type border-box">Total words</span>
+                    <span class="item-value border-box word">11.1k</span>
+                </span>
+            
+
+            
+                <span class="count-item border-box uv">
+                    <span class="item-type border-box">Unique Visitor</span>
+                    <span class="item-value border-box uv" id="busuanzi_value_site_uv"></span>
+                </span>
+            
+
+            
+                <span class="count-item border-box pv">
+                    <span class="item-type border-box">Page View</span>
+                    <span class="item-value border-box pv" id="busuanzi_value_site_pv"></span>
+                </span>
+            
+        </div>
+    
+
+    
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools right-toc">
+            <div class="post-tools-container border-box">
+    <ul class="post-tools-list border-box">
+        <!-- PC encrypt again -->
+        
+
+        <!-- PC TOC show toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- PC go comment -->
+        
+
+        <!-- PC full screen -->
+        <li class="tools-item flex-center full-screen">
+            <i class="fa-solid fa-expand"></i>
+        </li>
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container border-box ">
+    <ul class="side-tools-list side-tools-show-handle border-box">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <!-- toggle mode -->
+        
+            <li class="tools-item tool-toggle-theme-mode flex-center">
+                <i class="fas fa-moon"></i>
+            </li>
+        
+
+        <!-- rss -->
+        
+
+        <!-- to bottom -->
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list border-box">
+        
+            <li class="tools-item toggle-show-toc-tablet flex-center">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-top flex-center show-arrow">
+            <i class="arrow fas fa-arrow-up"></i>
+            <span class="percent"></span>
+        </li>
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+        <div class="tablet-post-toc-mask">
+            <div class="tablet-post-toc">
+                <div class="post-toc-wrap border-box">
+    <div class="post-toc border-box">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E4%B8%A2%E5%A4%B1"><span class="nav-text">消息丢失</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="nav-text">消息的可靠性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="nav-text">生产者的可靠性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85%E7%A1%AE%E8%AE%A4"><span class="nav-text">生产者确认</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Confirm%E6%A8%A1%E5%BC%8F%EF%BC%9A%E7%A1%AE%E4%BF%9D%E6%B6%88%E6%81%AF%E9%80%81%E8%BE%BE%E4%BA%A4%E6%8D%A2%E6%9C%BA"><span class="nav-text">Confirm模式：确保消息送达交换机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Return%E5%9B%9E%E9%80%80%E6%9C%BA%E5%88%B6%EF%BC%9A%E7%A1%AE%E4%BF%9D%E6%B6%88%E6%81%AF%E8%B7%AF%E7%94%B1%E6%88%90%E5%8A%9F"><span class="nav-text">Return回退机制：确保消息路由成功</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85%E7%A1%AE%E8%AE%A4%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-text">生产者确认机制的实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E5%8F%AF%E9%9D%A0%E6%80%A7%EF%BC%9A%E7%94%9F%E4%BA%A7%E8%80%85%E8%87%AA%E5%8A%A8%E9%87%8D%E8%BF%9E%E6%9C%BA%E5%88%B6"><span class="nav-text">连接可靠性：生产者自动重连机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-text">消息持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-text">实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LazyQueue"><span class="nav-text">LazyQueue</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%B0%E9%85%8D%E7%BD%AE"><span class="nav-text">控制台配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E9%85%8D%E7%BD%AE"><span class="nav-text">代码配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E8%80%85%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="nav-text">消费者的可靠性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E8%80%85%E7%A1%AE%E8%AE%A4"><span class="nav-text">消费者确认</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0-1"><span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E5%A4%B1%E8%B4%A5%E9%87%8D%E8%AF%95"><span class="nav-text">消费失败重试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E4%BA%A4%E6%8D%A2%E6%9C%BA-%E9%98%9F%E5%88%97"><span class="nav-text">异常交换机&#x2F;队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-2"><span class="nav-text">总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%B6%88%E6%81%AF%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7%EF%BC%9F"><span class="nav-text">如何保证消息的可靠性？</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        </div>
+    
+</main>
+
+
+
+
+
+<!-- common js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/header-shrink.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/back2top.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/toggle-theme.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/code-block.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/anime.min.js"></script>
+
+<!-- local search -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/local-search.min.js"></script>
+
+
+<!-- lazyload -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/lazyload.min.js"></script>
+
+
+<div class="pjax">
+    <!-- home page -->
+    
+
+    <!-- post page -->
+    
+        <!-- post-helper -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/post-helper.min.js"></script>
+
+        <!-- toc -->
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/toc.min.js"></script>
+        
+
+        <!-- copyright-info -->
+        
+
+        <!-- share -->
+        
+    
+
+    <!-- categories page -->
+    
+
+    <!-- links page -->
+    
+
+    <!-- photos page -->
+    
+
+    <!-- tools page -->
+    
+</div>
+
+<!-- mermaid -->
+
+
+<!-- pjax -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart()
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd()
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'))
+            KEEP.initExecute()
+        });
+    });
+</script>
+
+
+
+
+</body>
+</html>
