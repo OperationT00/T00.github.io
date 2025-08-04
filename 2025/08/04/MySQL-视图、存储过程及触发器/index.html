@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="T00">
+    
+    <title>
+        
+            MySQL--视图、存储过程及触发器 |
+        
+        Keeping T00
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="shortcut icon" href="/images/logo.svg">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/regular.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/solid.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/brands.min.css">
+    
+    <script class="keep-theme-configurations">
+    const KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"}
+    KEEP.theme_config = {"base_info":{"primary_color":"#0066cc","title":"Keeping T00","author":"T00","avatar":"/images/avatar.svg","logo":"/images/logo.svg","favicon":"/images/logo.svg"},"menu":{"home":"/","archives":"/archives","tags":"/tags","categories":"/categories","links":"/links"},"first_screen":{"enable":true,"background_img":"/images/bg.svg","background_img_dark":"/images/bg.svg","description":"Keep writing and Keep loving.","hitokoto":false},"social_contact":{"enable":false,"links":{"github":null,"weixin":null,"qq":null,"weibo":null,"zhihu":null,"twitter":null,"x":null,"facebook":null,"email":null}},"scroll":{"progress_bar":true,"percent":true,"hide_header":true},"home":{"announcement":null,"category":false,"tag":false,"post_datetime":"updated"},"post":{"author_badge":{"enable":true,"level_badge":true,"custom_badge":["One","Two","Three"]},"word_count":{"wordcount":true,"min2read":false},"datetime_format":"YYYY-MM-DD HH:mm:ss","copyright_info":false,"share":false,"reward":{"enable":false,"img_link":null,"text":null,"icon":null}},"code_block":{"tools":{"enable":true,"style":"default"},"highlight_theme":"obsidian"},"toc":{"enable":true,"number":false,"expand_all":false,"init_open":true,"layout":"right"},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"local_search":{"enable":true,"preload":true},"comment":{"enable":false,"use":"valine","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.39"},"waline":{"server_url":null,"reaction":false,"version":"3.3.2"},"giscus":{"repo":null,"repo_id":null,"category":"Announcements","category_id":null,"reactions_enabled":false},"artalk":{"server":null},"disqus":{"shortname":null}},"rss":{"enable":false},"lazyload":{"enable":true},"cdn":{"enable":true,"provider":"cdnjs"},"pjax":{"enable":true},"footer":{"since":2025,"word_count":true,"site_deploy":{"enable":false,"provider":"github","url":null},"record":{"enable":false,"list":[{"code":null,"link":null}]}},"inject":{"enable":false,"css":[null],"js":[null]},"root":"","source_data":{},"version":"4.2.5"}
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"}
+    KEEP.language_code_block = {"copy":"Copy code","copied":"Copied","fold":"Fold code block","folded":"Folded"}
+    KEEP.language_copy_copyright = {"copy":"Copy copyright info","copied":"Copied","title":"Original post title","author":"Original post author","link":"Original post link"}
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <i class="pjax-progress-icon fas fa-circle-notch fa-spin"></i>
+    
+</div>
+
+
+
+<main class="page-container border-box">
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="border-box header-content">
+        <div class="left flex-start border-box">
+            
+                <a class="logo-image border-box" href="/">
+                    <img src="/images/logo.svg">
+                </a>
+            
+            <a class="site-name border-box" href="/">
+               Keeping T00
+            </a>
+        </div>
+
+        <div class="right border-box">
+            <div class="pc border-box">
+                <ul class="menu-list border-box">
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/">
+                                
+                                HOME
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/archives">
+                                
+                                ARCHIVES
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/tags">
+                                
+                                TAGS
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/categories">
+                                
+                                CATEGORIES
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/links">
+                                
+                                LINKS
+                                
+                            </a>
+                            
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="menu-text-color fas search fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile border-box flex-start">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list border-box">
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/">
+                            
+                            HOME
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/archives">
+                            
+                            ARCHIVES
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/tags">
+                            
+                            TAGS
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/categories">
+                            
+                            CATEGORIES
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/links">
+                            
+                            LINKS
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+                
+
+                    
+<div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+        <div class="post-content-container border-box">
+            
+
+            <div class="post-content-bottom border-box">
+                
+                    <div class="post-title">
+                        MySQL--视图、存储过程及触发器
+                    </div>
+                
+
+                
+                    <div class="post-header border-box">
+                        
+                            <div class="avatar-box border-box">
+                                <img src="/images/avatar.svg">
+                            </div>
+                        
+                        <div class="info-box">
+                            <div class="author border-box">
+                                <span class="name">T00</span>
+                                
+                                    <span class="author-badge">Lv2</span>
+                                
+                            </div>
+                            <div class="meta-info border-box">
+                                
+
+<div class="post-meta-info-container border-box post">
+    <div class="post-meta-info border-box">
+        
+
+        
+            <span class="meta-info-item post-create-date">
+                <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
+                <span class="datetime">2025-08-04 21:04:58</span>
+            </span>
+
+            
+                <span class="meta-info-item post-update-date">
+                    <i class="icon fa-solid fa-file-pen"></i>&nbsp;
+                    <span class="datetime" data-updated="Mon Aug 04 2025 22:06:39 GMT+0800">2025-08-04 22:06:39</span>
+                </span>
+            
+        
+
+        
+            <span class="meta-info-item post-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="post-category-ul">
+                    
+                            <li class="category-item"><a href="/categories/MySQL/">MySQL</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+            <span class="post-tag meta-info-item border-box">
+                <ul class="post-tag-ul">
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/MySQL/">MySQL</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+        
+            <span class="meta-info-item post-wordcount">
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>6.2k Words</span>
+            </span>
+        
+        
+        
+            <span class="meta-info-item post-pv">
+                <i class="icon fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    </div>
+
+    
+</div>
+
+                            </div>
+                        </div>
+                    </div>
+                
+
+                <div class="post-content keep-markdown-body ">
+                    
+
+                    
+                         <h1 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h1><blockquote>
+<p>视图（View）是一种<strong>虚拟存在</strong>的表。视图中的数据<strong>并不在数据库中实际存在</strong>，行和列数据来自定义视 图的查询中使用的表，并且是在使用视图时动态生成的。 </p>
+<p>通俗的讲，视图<strong>只保存了查询的SQL逻辑</strong>，不保存查询结果。所以我们在创建视图的时候，主要的工作就落在创建这条SQL查询语句上。</p>
+</blockquote>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><h3 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h3><ol>
+<li>创建</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> [<span class="keyword">OR</span> REPLACE] <span class="keyword">VIEW</span> 视图名称[(列名列表)] <span class="keyword">AS</span> <span class="keyword">SELECT</span>语句 [<span class="keyword">WITH</span> [<span class="keyword">CASCADED</span><span class="operator">|</span><span class="keyword">LOCAL</span>] <span class="keyword">CHECK</span> OPTION ]</span><br></pre></td></tr></table></figure>
+
+<p>现在我们基于表<code>student</code>建立一个视图（这里有个参数是<code>or replace</code>，表示是否<strong>覆盖原来的视图</strong>，创建的时候可以不加）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建视图</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">view</span> stu_v_1 <span class="keyword">as</span> <span class="keyword">select</span> id,name <span class="keyword">from</span> student <span class="keyword">where</span> id <span class="operator">&lt;=</span><span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804144250831.64e5zknmix.webp"
+                         alt="image-20250804144250831" style="zoom:50%;" align='left' 
+                 >
+
+<h3 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查看创建视图语句</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">CREATE</span> <span class="keyword">VIEW</span> 视图名称;</span><br><span class="line"><span class="comment">-- 查看视图数据</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> 视图名称 ...... ;</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 方式一</span></span><br><span class="line"><span class="keyword">CREATE</span> [<span class="keyword">OR</span> REPLACE] <span class="keyword">VIEW</span> 视图名称[(列名列表)] <span class="keyword">AS</span> <span class="keyword">SELECT</span>语句 [<span class="keyword">WITH</span> [<span class="keyword">CASCADED</span><span class="operator">|</span><span class="keyword">LOCAL</span>] <span class="keyword">CHECK</span> OPTION]</span><br><span class="line"><span class="comment">-- 方式二</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">VIEW</span> 视图名称[(列名列表)] <span class="keyword">AS</span> <span class="keyword">SELECT</span>语句 [<span class="keyword">WITH</span>[<span class="keyword">CASCADED</span><span class="operator">|</span><span class="keyword">LOCAL</span>] <span class="keyword">CHECK</span> OPTION]</span><br></pre></td></tr></table></figure>
+
+<p>这里修改视图的第一种方式就必须携带<code>or replace</code>了。</p>
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">VIEW</span> [IF <span class="keyword">EXISTS</span>] 视图名称 [,视图名称] ... </span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="检查选项"><a href="#检查选项" class="headerlink" title="检查选项"></a>检查选项</h2><p>我们来试试向视图中插入数据：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert into</span> stu_v_1 <span class="keyword">values</span>(<span class="number">6</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br><span class="line"><span class="keyword">insert into</span> stu_v_1 <span class="keyword">values</span>(<span class="number">17</span>,<span class="string">&#x27;Tom22&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在<strong>基表</strong>当中，我们可以发现两条数据都插入了：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804153851720.2rvg57726i.webp"
+                         alt="image-20250804153851720" 
+                 >
+
+<p>但是视图当中只有id为6的：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804153913580.41ydbip1hn.webp"
+                         alt="image-20250804153913580" style="zoom: 50%;" align='left' 
+                 >
+
+<blockquote>
+<p>因为我们在创建视图的时候，是相当于把数据先插入到基表中，然后再重新创建一个视图，这时会重新判断条件，<strong>指定的条件为 id&lt;&#x3D;10</strong>, id为17的数据，是<strong>不符合条件</strong>的，所以<strong>没有查询出来</strong>。</p>
+</blockquote>
+<p>如果我们定义视图时，如果指定了条件，然后我们在插入、修改、删除数据时，是否可以做到必须满足条件才能操作，否则不能够操作呢？ </p>
+<blockquote>
+<p>答案是可以的，这就需要借助于视图的检查选项了。</p>
+</blockquote>
+<p>当使用<code>WITH CHECK OPTION</code>子句创建视图时，MySQL会通过视图<strong>检查正在更改的每个行</strong>，例如 插 入，更新，删除，以<strong>使其符合视图的定义</strong>。 </p>
+<p>MySQL允许<strong>基于另一个视图创建视图</strong>，它还会检查依赖视图中的规则以<strong>保持一致性</strong>。</p>
+<p>为了确定检查的范围，mysql提供了两个选项： CASCADED 和 LOCAL  ，默认值为 CASCADED 。</p>
+<p>我们带上检查选项再次创建视图：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">view</span> stu_v_1 <span class="keyword">as</span> <span class="keyword">select</span> id,name <span class="keyword">from</span> student <span class="keyword">where</span> id<span class="operator">&lt;=</span><span class="number">10</span> <span class="keyword">with</span> <span class="keyword">check</span> option;</span><br></pre></td></tr></table></figure>
+
+<p>这时我们再次插入刚才的数据，发现6还是不影响，但是17就插入失败了：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804155220092.3rbjid9tcc.webp"
+                         alt="image-20250804155220092" 
+                 >
+
+<blockquote>
+<p>这是因为加上检查选项之后，系统就会在你每次更新视图时，去检查行的条件是否符合创建视图时的条件。</p>
+</blockquote>
+<p>我们知道检查选项有两个参数，现在我们就来分别对其进行剖析。</p>
+<h3 id="CASCADED"><a href="#CASCADED" class="headerlink" title="CASCADED"></a>CASCADED</h3><blockquote>
+<p>级联。 </p>
+<p>比如，v2视图是基于v1视图的，如果在v2视图创建的时候指定了检查选项为 cascaded，但是v1视图 创建时未指定检查选项。 则在执行检查时，不仅会检查v2，还会级联检查v2的关联视图v1，如下图：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804155446880.8ok0c7nl58.webp"
+                         alt="image-20250804155446880" 
+                 ></blockquote>
+<p>我们首先创建一个不带检查选项的视图</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">view</span> stu_v_1 <span class="keyword">as</span> <span class="keyword">select</span> id,name <span class="keyword">from</span> student <span class="keyword">where</span> id <span class="operator">&lt;=</span><span class="number">20</span></span><br></pre></td></tr></table></figure>
+
+<p>它的插入都可以成功，因为它没有带检查选项。</p>
+<p>我们再基于<code>stu_v_1</code>创建一个带cascaded的视图：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">view</span> stu_v_2 <span class="keyword">as</span> <span class="keyword">select</span> id,name <span class="keyword">from</span> stu_v_1 <span class="keyword">where</span> id <span class="operator">&gt;=</span><span class="number">10</span> <span class="keyword">with</span> <span class="keyword">cascaded</span> <span class="keyword">check</span> option ;</span><br></pre></td></tr></table></figure>
+
+<p>这时我们再来插入几组数据：</p>
+<ol>
+<li>id为6</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert into</span> stu_v_2 <span class="keyword">values</span> (<span class="number">6</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>插入失败，由于不满足它本身的条件</p>
+</blockquote>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804160110068.2a5egm5olp.webp"
+                         alt="image-20250804160110068" 
+                 >
+
+<ol start="2">
+<li>id为13</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert into</span> stu_v_2 <span class="keyword">values</span> (<span class="number">13</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>插入成功</p>
+</blockquote>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804160215251.mdx4ky4u.webp"
+                         alt="image-20250804160215251" 
+                 >
+
+<ol start="3">
+<li>id为21</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert into</span> stu_v_2 <span class="keyword">values</span> (<span class="number">21</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>插入失败，为什么呢？</p>
+<p>明明21满足它本身的条件（id&gt;&#x3D;10），这是因为它是基于<code>stu_v_1</code>的视图，同时又携带cascaded的检查选择，它会将这个设置传递给<code>stu_v_1</code>，让<code>stu_v_1</code>也会检查，整体呈现一种递归性。</p>
+</blockquote>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804160247148.1zikngqgge.webp"
+                         alt="image-20250804160247148" 
+                 >
+
+<hr>
+<p>我们再基于<code>stu_v_2</code>创建一个不带检查选项的视图：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">view</span> stu_v_3 <span class="keyword">as</span> <span class="keyword">select</span> id,name <span class="keyword">from</span> stu_v_2 <span class="keyword">where</span> id <span class="operator">&lt;=</span><span class="number">15</span>;</span><br></pre></td></tr></table></figure>
+
+<p>我们插入几条数据：</p>
+<ol>
+<li>id为11和17</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert into</span> stu_v_2 <span class="keyword">values</span> (<span class="number">11</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br><span class="line"><span class="keyword">insert into</span> stu_v_2 <span class="keyword">values</span> (<span class="number">17</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>他们都可以插入成功，因为<code>stu_v_3</code>本身没有条件，所以不管满不满足它自己，都不会触发检查</p>
+</blockquote>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804160825560.3gopp7ul73.webp"
+                         alt="image-20250804160825560" 
+                 >
+
+<ol start="2">
+<li>id为7和28</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert into</span> stu_v_2 <span class="keyword">values</span> (<span class="number">7</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br><span class="line"><span class="keyword">insert into</span> stu_v_2 <span class="keyword">values</span> (<span class="number">28</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这两条数据插入失败了，是为什么呢？</p>
+<p>其实，就算这一层本身不带检查选项了，它也会逐层向上检查，看它所继承的视图是否有检查选项；它继承的<code>stu_v_2</code>带检查选项，它进行逐层检查时发现条件不满足，于是就插入失败了。</p>
+</blockquote>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804160930455.wivckumkw.webp"
+                         alt="image-20250804160930455" 
+                 >
+
+<hr>
+<h3 id="local"><a href="#local" class="headerlink" title="local"></a>local</h3><blockquote>
+<p>本地。 </p>
+<p>比如，v2视图是基于v1视图的，如果在v2视图创建的时候指定了检查选项为 local ，但是v1视图创建时未指定检查选项。 则在执行检查时，知会检查v2，不会检查v2的关联视图v1，如下图：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804161441718.b97qa06a8.webp"
+                         alt="image-20250804161441718" 
+                 ></blockquote>
+<p>我们创建三个视图</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">view</span> stu_v_4 <span class="keyword">as</span> <span class="keyword">select</span> id,name <span class="keyword">from</span> student <span class="keyword">where</span> id <span class="operator">&lt;=</span><span class="number">20</span>;</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">view</span> stu_v_5 <span class="keyword">as</span> <span class="keyword">select</span> id,name <span class="keyword">from</span> stu_v_4 <span class="keyword">where</span> id <span class="operator">&gt;=</span><span class="number">10</span> <span class="keyword">with</span> <span class="keyword">cascaded</span> <span class="keyword">check</span> option ;</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace <span class="keyword">view</span> stu_v_6 <span class="keyword">as</span> <span class="keyword">select</span> id,name <span class="keyword">from</span> stu_v_5 <span class="keyword">where</span> id <span class="operator">&lt;=</span><span class="number">15</span>;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>对v5插入数据</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert into</span> stu_v_5 <span class="keyword">values</span> (<span class="number">6</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br><span class="line"><span class="keyword">insert into</span> stu_v_5 <span class="keyword">values</span> (<span class="number">13</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br><span class="line"><span class="keyword">insert into</span> stu_v_5 <span class="keyword">values</span> (<span class="number">21</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>只有6插入失败，因local不具备传递功能，你有检查选项就是有，没有就是没有，各自判断出来</p>
+</blockquote>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804161715877.5q7q8pfbo2.webp"
+                         alt="image-20250804161715877" 
+                 >
+
+<ol start="2">
+<li>对v6插入数据</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert into</span> stu_v_6 <span class="keyword">values</span> (<span class="number">7</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br><span class="line"><span class="keyword">insert into</span> stu_v_6 <span class="keyword">values</span> (<span class="number">11</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br><span class="line"><span class="keyword">insert into</span> stu_v_6 <span class="keyword">values</span> (<span class="number">17</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br><span class="line"><span class="keyword">insert into</span> stu_v_6 <span class="keyword">values</span> (<span class="number">28</span>,<span class="string">&#x27;Tom&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>也只有7插入失败，原因同上</p>
+</blockquote>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804161750998.3uv5g32w2a.webp"
+                         alt="image-20250804161750998" 
+                 >
+
+<hr>
+<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><p>要使视图可更新，视图中的行与基础表中的行之间必须存在一对一的关系。如果视图包含以下任何一 项，则该视图不可更新： </p>
+<ol>
+<li>聚合函数或窗口函数（SUM()、 MIN()、 MAX()、 COUNT()等）</li>
+<li>DISTINCT </li>
+<li>GROUP BY </li>
+<li>HAVING </li>
+<li>UNION 或者 UNION ALL</li>
+</ol>
+<p>我们来测试一下，创建一个<strong>带有count的视图</strong>：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">view</span> stu_v_count <span class="keyword">as</span> <span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804162102166.3yerdsvys3.webp"
+                         alt="image-20250804162102166" style="zoom:50%;" align='left'
+                 >
+
+<p>上述的视图中，就只有一个<strong>单行单列</strong>的数据，如果我们对这个视图进行更新或插入的，将会报错。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert into</span> stu_v_count <span class="keyword">values</span>(<span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804162135464.sz9ev1jv8.webp"
+                         alt="image-20250804162135464" 
+                 >
+
+<h2 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h2><ol>
+<li><strong>简单：<strong>视图不仅可以简化用户对数据的理解，也可以</strong>简化他们的操作</strong>。那些被<strong>经常使用</strong>的查询可以被定义为视图，从而使得用户不必为以后的操作每次指定全部的条件。 </li>
+<li><strong>安全：<strong>数据库可以授权，但不能授权到数据库</strong>特定行和特定的列</strong>上。通过视图用户只能查询和修改他们所能见到的数据。</li>
+<li>**数据独立：**视图可帮助用户屏蔽真实表结构变化带来的影响。</li>
+</ol>
+<h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><ol>
+<li>为了保证数据库表的<strong>安全性</strong>，开发人员在操作tb_user表时，只能看到的用户的基本字段，屏蔽 手机号和邮箱两个字段。</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">view</span> tb_user_view <span class="keyword">as</span> <span class="keyword">select</span> id,name,profession,age,gender,status,createtime <span class="keyword">from</span> tb_user;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如下图，只有我们想让对方看见的字段，避免了敏感字段，比如密码什么的、</p>
+</blockquote>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804162532014.4cl74o49n9.webp"
+                         alt="image-20250804162532014" 
+                 >
+
+<ol start="2">
+<li>查询每个学生所选修的课程（三张表联查），这个功能在很多的业务中都有使用到，为了<strong>简化操作</strong>，定义一个视图。</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">view</span> tb_stu_course_view <span class="keyword">as</span> <span class="keyword">select</span> s.name student_name , s.no student_no ,c.name course_name <span class="keyword">from</span> student s, student_course sc , course c <span class="keyword">where</span> s.id <span class="operator">=</span> sc.studentid <span class="keyword">and</span> sc.courseid <span class="operator">=</span> c.id;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如下图，这样每次都只需要针对于这个视图进行操作即可，不用每次都写很长的连表条件。</p>
+</blockquote>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804162647472.icflpmbpx.webp"
+                         alt="image-20250804162647472" 
+                 >
+
+<h1 id="存储过程"><a href="#存储过程" class="headerlink" title="存储过程"></a>存储过程</h1><blockquote>
+<p>存储过程是<strong>事先经过编译并存储在数据库中的一段SQL语句</strong>的集合，调用存储过程可以简化应用开发人员的很多工作，<strong>减少数据在数据库和应用服务器之间的传输</strong>，对于提高数据处理的效率是有好处的。 </p>
+</blockquote>
+<p>存储过程思想上很简单，就是数据库 SQL 语言层面的代码封装与重用：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804162840290.7axh86cj4m.webp"
+                         alt="image-20250804162840290" 
+                 >
+
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><ol>
+<li><strong>封装，复用</strong>：可以把某一业务SQL封装在存储过程中，需要用到的时候直接调用即可。 </li>
+<li>**可以接收参数，也可以返回数据：**在存储过程中，可以传递参数，也可以接收返回值。 </li>
+<li><strong>减少网络交互，效率提升：</strong> 如果涉及到多条SQL，每执行一次都是一次网络传 输。 而如果封装在存储过程中，我们<strong>只需要网络交互一次</strong>可能就可以了。</li>
+</ol>
+<h2 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h2><h3 id="创建-1"><a href="#创建-1" class="headerlink" title="创建"></a>创建</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> 存储过程名称 ([ 参数列表 ])</span><br><span class="line"></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line"><span class="comment">-- SQL语句</span></span><br><span class="line"><span class="keyword">END</span> ;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：在<strong>命令行</strong>中，执行创建存储过程的SQL时，需要通过关键字<code>delimiter</code>指定SQL语句的<strong>结束符</strong>（指定为除<code>;</code>的其他符号）。</p>
+<p>因为命令行自动识别<code>;</code>为结束符，它识别到begin和end中间的分号时，就认为这一条SQL语句已经写完了，就会出现错误。</p>
+</blockquote>
+<h3 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CALL</span> 名称 ([ 参数 ]); </span><br></pre></td></tr></table></figure>
+
+<h3 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查询指定数据库的存储过程及状态信息</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> INFORMATION_SCHEMA.ROUTINES <span class="keyword">WHERE</span> ROUTINE_SCHEMA <span class="operator">=</span> <span class="string">&#x27;xxx&#x27;</span>;  </span><br><span class="line"><span class="comment">-- 查询某个存储过程的定义</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> 存储过程名称 ;  </span><br></pre></td></tr></table></figure>
+
+<h3 id="删除-1"><a href="#删除-1" class="headerlink" title="删除"></a>删除</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">PROCEDURE</span> [IF <span class="keyword">EXISTS</span>] 存储过程名称；</span><br></pre></td></tr></table></figure>
+
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>在MySQL中变量分为三种类型: 系统变量、用户定义变量、局部变量。</p>
+<h3 id="系统变量"><a href="#系统变量" class="headerlink" title="系统变量"></a>系统变量</h3><blockquote>
+<p>系统变量 是MySQL服务器提供，不是用户定义的，<strong>属于服务器层面</strong>。分为全局变量（GLOBAL）、会话 变量（SESSION）。</p>
+</blockquote>
+<ol>
+<li>查看系统变量</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查看所有系统变量</span></span><br><span class="line"><span class="keyword">SHOW</span> [SESSION <span class="operator">|</span> <span class="keyword">GLOBAL</span>] VARIABLES ;  </span><br><span class="line"><span class="comment">-- 可以通过LIKE模糊匹配方式查找变量</span></span><br><span class="line"><span class="keyword">SHOW</span> [SESSION <span class="operator">|</span> <span class="keyword">GLOBAL</span>] VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;......&#x27;</span>;     </span><br><span class="line"><span class="comment">--  查看指定变量的值</span></span><br><span class="line"><span class="keyword">SELECT</span> @@[SESSION <span class="operator">|</span> <span class="keyword">GLOBAL</span>]  系统变量名;                    </span><br></pre></td></tr></table></figure>
+
+<p>查询所有系统变量：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804165852282.2a5egm5om0.webp"
+                         alt="image-20250804165852282" 
+                 >
+
+<p>查看以<code>auto</code>开头的系统变量：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804170006390.5c1ahu70t5.webp"
+                         alt="image-20250804170006390" 
+                 >
+
+<p>知道名字直接查当前会话中的系统变量：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> @<span class="variable">@session</span>.autocommit;</span><br><span class="line"><span class="comment">-- 全局同理</span></span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804170117475.3yerdsvysa.webp"
+                         alt="image-20250804170117475" style="zoom:50%;" align='left'
+                 >
+
+<ol start="2">
+<li>设置系统变量</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> [SESSION<span class="operator">|</span><span class="keyword">GLOBAL</span>] 系统变量名 <span class="operator">=</span> 值 ; </span><br><span class="line"><span class="keyword">SET</span> @@[SESSION<span class="operator">|</span><span class="keyword">GLOBAL</span>] 系统变量名 <span class="operator">=</span> 值 ; </span><br></pre></td></tr></table></figure>
+
+<p>注意:  如果没有指定SESSION&#x2F;GLOBAL，<strong>默认是SESSION，会话变量</strong>。   </p>
+<ol>
+<li><strong>全局变量(GLOBAL)</strong>: 全局变量针对于<strong>所有</strong>的会话。 </li>
+<li><strong>会话变量(SESSION):</strong>  会话变量针对于<strong>单个</strong>会话，在另外一个会话窗口就不生效了。</li>
+</ol>
+<blockquote>
+<p>mysql服务重新启动之后，所设置的全局参数会失效，要想不失效，可以在 &#x2F;etc&#x2F;my.cnf 中配置。</p>
+</blockquote>
+<h3 id="用户定义变量"><a href="#用户定义变量" class="headerlink" title="用户定义变量"></a>用户定义变量</h3><blockquote>
+<p>用户定义变量是用户根据需要<strong>自己定义的变量</strong>，用户变量<strong>不用提前声明</strong>，在用的时候<strong>直接用 “@变量名” 使用就可以</strong>。其作用域为<strong>当前连接</strong>，只能在当前会话中使用。</p>
+</blockquote>
+<ol>
+<li>赋值</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="variable">@var_name</span> <span class="operator">=</span> expr [, <span class="variable">@var_name</span> <span class="operator">=</span> expr] ... ; </span><br><span class="line"><span class="keyword">SET</span> <span class="variable">@var_name</span> :<span class="operator">=</span> expr [, <span class="variable">@var_name</span> :<span class="operator">=</span> expr] ... ; </span><br></pre></td></tr></table></figure>
+
+<p>赋值时，可以使用 &#x3D; ，也可以使用 :&#x3D; 。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="variable">@var_name</span> :<span class="operator">=</span> expr [, <span class="variable">@var_name</span> :<span class="operator">=</span> expr] ... ; </span><br><span class="line"><span class="keyword">SELECT</span> 字段名 <span class="keyword">INTO</span> <span class="variable">@var_name</span>  <span class="keyword">FROM</span>  表名;</span><br></pre></td></tr></table></figure>
+
+<p>方式一：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> <span class="variable">@myname</span> <span class="operator">=</span> <span class="string">&#x27;itcast&#x27;</span>;</span><br><span class="line"><span class="keyword">set</span> <span class="variable">@myage</span> :<span class="operator">=</span><span class="number">18</span>;</span><br><span class="line"><span class="keyword">set</span> <span class="variable">@mygender</span> :<span class="operator">=</span> <span class="string">&#x27;男&#x27;</span>,<span class="variable">@myhobby</span> :<span class="operator">=</span> <span class="string">&#x27;Java&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>推荐使用<code>:=</code>，因为sql里面比较运算符只有<code>=</code>，用<code>:=</code>比较好区分。</li>
+</ul>
+<p>方式二</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="variable">@myphone</span> :<span class="operator">=</span><span class="string">&#x27;xiaomi&#x27;</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">into</span> <span class="variable">@mycount</span> <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>使用</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="variable">@var_name</span>; </span><br></pre></td></tr></table></figure>
+
+<p>如下展示刚刚生成的变量：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="variable">@myname</span>,<span class="variable">@myage</span>,<span class="variable">@mygender</span>,<span class="variable">@myhobby</span>;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804171223772.2dp0ebyrbu.webp"
+                         alt="image-20250804171223772" 
+                 >
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="variable">@myphone</span>,<span class="variable">@mycount</span>;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804171422783.4g4t2dxcd7.webp"
+                         alt="image-20250804171422783" 
+                 >
+
+<blockquote>
+<p>注意: 用户定义的变量无需对其进行声明或初始化，只不过获取到的值为NULL。</p>
+</blockquote>
+<h3 id="局部变量"><a href="#局部变量" class="headerlink" title="局部变量"></a>局部变量</h3><blockquote>
+<p><strong>局部变量</strong>是根据需要定义的在<strong>局部生效</strong>的变量，访问之前，需要<code>DECLARE</code>声明。可用作<strong>存储过程内的局部变量和输入参数</strong>，局部变量的范围是在其内声明的<strong>BEGIN … END块</strong>。</p>
+</blockquote>
+<ol>
+<li>声明</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DECLARE</span> 变量名 变量类型 [<span class="keyword">DEFAULT</span> ... ] ;</span><br></pre></td></tr></table></figure>
+
+<p>变量类型就是数据库字段类型：INT、BIGINT、CHAR、VARCHAR、DATE、TIME等。</p>
+<ol start="2">
+<li>赋值</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> 变量名 <span class="operator">=</span> 值 ;</span><br><span class="line"><span class="keyword">SET</span> 变量名 :<span class="operator">=</span> 值 ;</span><br><span class="line"><span class="keyword">SELECT</span> 字段名 <span class="keyword">INTO</span> 变量名 <span class="keyword">FROM</span> 表名 ... ; </span><br></pre></td></tr></table></figure>
+
+<p>示例</p>
+<blockquote>
+<p>default后跟初始化值，如果不用初始值可以省略。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> p2()</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">declare</span> stu_count <span class="type">int</span> <span class="keyword">default</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">set</span> stu_count :<span class="operator">=</span><span class="number">100</span>;</span><br><span class="line">    <span class="keyword">select</span> stu_count;</span><br><span class="line"><span class="keyword">end</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">call</span> p2();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="if"><a href="#if" class="headerlink" title="if"></a>if</h2><blockquote>
+<p>在if条件判断的结构中，ELSE IF 结构可以有多个，也可以没有。 ELSE结构可以有，也可以没有。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">IF  条件<span class="number">1</span>  <span class="keyword">THEN</span> </span><br><span class="line">    .....</span><br><span class="line">ELSEIF  条件<span class="number">2</span>  <span class="keyword">THEN</span>       <span class="comment">-- 可选</span></span><br><span class="line">    .....</span><br><span class="line"><span class="keyword">ELSE</span>                     <span class="comment">-- 可选</span></span><br><span class="line">    .....</span><br><span class="line"><span class="keyword">END</span>  IF;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例</strong></p>
+<p>根据定义的分数score变量，判定当前分数对应的分数等级。 </p>
+<ul>
+<li>score &gt;&#x3D; 85分，等级为优秀。 </li>
+<li>score &gt;&#x3D; 60分 且 score &lt; 85分，等级为及格。 </li>
+<li>score &lt; 60分，等级为不及格。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> p3()</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">declare</span> score <span class="type">int</span> <span class="keyword">default</span> <span class="number">58</span>;</span><br><span class="line">    <span class="keyword">declare</span> <span class="keyword">result</span> <span class="type">varchar</span>(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">    if score <span class="operator">&gt;=</span><span class="number">85</span> <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">set</span> <span class="keyword">result</span> :<span class="operator">=</span><span class="string">&#x27;优秀&#x27;</span>;</span><br><span class="line">    elseif score <span class="operator">&gt;=</span><span class="number">60</span> <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">set</span> <span class="keyword">result</span> :<span class="operator">=</span><span class="string">&#x27;及格&#x27;</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">set</span> <span class="keyword">result</span> :<span class="operator">=</span><span class="string">&#x27;不及格&#x27;</span>;</span><br><span class="line">    <span class="keyword">end</span> if;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">select</span> <span class="keyword">result</span>;</span><br><span class="line"><span class="keyword">end</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">call</span> p3();</span><br></pre></td></tr></table></figure>
+
+<p>上述的需求我们虽然已经实现了，但是也存在一些问题，比如：score 分数我们是在存储过程中<strong>定义死的</strong>，而且最终计算出来的分数等级，我们也仅仅是<strong>最终查询展示出来</strong>而已。 </p>
+<p>那么我们能不能，把score分数<strong>动态的传递</strong>进来，计算出来的分数等级是否可以作为返回值返回呢？答案是肯定的，我们可以通过接下来所讲解的<strong>参数</strong>来解决上述的问题。</p>
+<hr>
+<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><p>参数的类型，主要分为以下三种：IN、OUT、INOUT。 具体的含义如下：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>in</td>
+<td>该类参数作为输入，也就是需要调用时传入值</td>
+</tr>
+<tr>
+<td>out</td>
+<td>该类参数作为输出，也就是该参数可以作为返回值</td>
+</tr>
+<tr>
+<td>inout</td>
+<td>既可以作为输入参数，也可以作为输出参数</td>
+</tr>
+</tbody></table>
+<p><strong>语法：</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span>  <span class="keyword">PROCEDURE</span>   存储过程名称 ([ <span class="keyword">IN</span><span class="operator">/</span><span class="keyword">OUT</span><span class="operator">/</span><span class="keyword">INOUT</span>  参数名  参数类型 ])</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">    <span class="comment">-- SQL语句</span></span><br><span class="line"><span class="keyword">END</span> ;</span><br></pre></td></tr></table></figure>
+
+<p>根据<strong>传入参数</strong>score，判定当前分数对应的分数等级，并<strong>返回</strong>。  </p>
+<ul>
+<li>score &gt;&#x3D; 85分，等级为优秀。 </li>
+<li>score &gt;&#x3D; 60分 且 score &lt; 85分，等级为及格。 </li>
+<li>score &lt; 60分，等级为不及格。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> p4(<span class="keyword">in</span> score <span class="type">int</span>, <span class="keyword">out</span> <span class="keyword">result</span> <span class="type">varchar</span>(<span class="number">10</span>))</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    if score <span class="operator">&gt;=</span><span class="number">85</span> <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">set</span> <span class="keyword">result</span> :<span class="operator">=</span><span class="string">&#x27;优秀&#x27;</span>;</span><br><span class="line">    elseif score <span class="operator">&gt;=</span><span class="number">60</span> <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">set</span> <span class="keyword">result</span> :<span class="operator">=</span><span class="string">&#x27;及格&#x27;</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">set</span> <span class="keyword">result</span> :<span class="operator">=</span><span class="string">&#x27;不及格&#x27;</span>;</span><br><span class="line">    <span class="keyword">end</span> if;</span><br><span class="line"><span class="keyword">end</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">call</span> p4(<span class="number">70</span>,<span class="variable">@result</span>);</span><br><span class="line"><span class="keyword">select</span> <span class="variable">@result</span>;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="case"><a href="#case" class="headerlink" title="case"></a>case</h2><p>case结构及作用，和我们在基础篇中所讲解的流程控制函数很类似。</p>
+<p>有两种语法格式：</p>
+<p><strong>语法1：</strong></p>
+<blockquote>
+<p>含义： 当case_value的值为 when_value1时，执行statement_list1，当值为 when_value2时执行statement_list2， 否则就执行 statement_list</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CASE</span>  case_value</span><br><span class="line">    <span class="keyword">WHEN</span> when_value1 <span class="keyword">THEN</span> statement_list1</span><br><span class="line">   [ <span class="keyword">WHEN</span> when_value2 <span class="keyword">THEN</span> statement_list2] ...</span><br><span class="line">   [ <span class="keyword">ELSE</span> statement_list ]</span><br><span class="line"><span class="keyword">END</span> <span class="keyword">CASE</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>语法2：</strong></p>
+<blockquote>
+<p>含义： 当条件search_condition1成立时，执行statement_list1，当条件search_condition2成 立时，执行statement_list2， 否则就执行 statement_list</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CASE</span></span><br><span class="line">  <span class="keyword">WHEN</span> search_condition1 <span class="keyword">THEN</span> statement_list1</span><br><span class="line">  [<span class="keyword">WHEN</span> search_condition2 <span class="keyword">THEN</span> statement_list2] ...</span><br><span class="line">  [<span class="keyword">ELSE</span> statement_list]</span><br><span class="line"><span class="keyword">END</span> <span class="keyword">CASE</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例</strong></p>
+<p>根据传入的月份，判定月份所属的季节（要求采用case结构）。 </p>
+<ul>
+<li>1-3月份，为第一季度 </li>
+<li>4-6月份，为第二季度 </li>
+<li>7-9月份，为第三季度 </li>
+<li>10-12月份，为第四季度</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> p5(<span class="keyword">in</span> <span class="keyword">month</span> <span class="type">int</span>)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">declare</span> <span class="keyword">result</span> <span class="type">varchar</span>(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span></span><br><span class="line">        <span class="keyword">when</span> <span class="keyword">month</span> <span class="operator">&gt;=</span><span class="number">1</span> <span class="keyword">and</span> <span class="keyword">month</span> <span class="operator">&lt;=</span><span class="number">3</span> <span class="keyword">then</span></span><br><span class="line">            <span class="keyword">set</span> <span class="keyword">result</span> :<span class="operator">=</span><span class="string">&#x27;第1季度&#x27;</span>;</span><br><span class="line">        <span class="keyword">when</span> <span class="keyword">month</span> <span class="operator">&gt;=</span><span class="number">4</span> <span class="keyword">and</span> <span class="keyword">month</span> <span class="operator">&lt;=</span><span class="number">6</span> <span class="keyword">then</span></span><br><span class="line">            <span class="keyword">set</span> <span class="keyword">result</span> :<span class="operator">=</span><span class="string">&#x27;第2季度&#x27;</span>;</span><br><span class="line">        <span class="keyword">when</span> <span class="keyword">month</span> <span class="operator">&gt;=</span><span class="number">7</span> <span class="keyword">and</span> <span class="keyword">month</span> <span class="operator">&lt;=</span><span class="number">9</span> <span class="keyword">then</span></span><br><span class="line">            <span class="keyword">set</span> <span class="keyword">result</span> :<span class="operator">=</span><span class="string">&#x27;第3季度&#x27;</span>;</span><br><span class="line">        <span class="keyword">when</span> <span class="keyword">month</span> <span class="operator">&gt;=</span><span class="number">10</span> <span class="keyword">and</span> <span class="keyword">month</span> <span class="operator">&lt;=</span><span class="number">12</span> <span class="keyword">then</span></span><br><span class="line">            <span class="keyword">set</span> <span class="keyword">result</span> :<span class="operator">=</span><span class="string">&#x27;第4季度&#x27;</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">set</span> <span class="keyword">result</span> :<span class="operator">=</span><span class="string">&#x27;非法参数&#x27;</span>;</span><br><span class="line">    <span class="keyword">end</span> <span class="keyword">case</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">select</span> concat(<span class="string">&#x27;你输入的月份为：&#x27;</span>,<span class="keyword">month</span>,<span class="string">&#x27;所属的季度为：&#x27;</span>,<span class="keyword">result</span>);</span><br><span class="line"><span class="keyword">end</span>;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="while"><a href="#while" class="headerlink" title="while"></a>while</h2><p>while 循环是有条件的循环控制语句。满足条件后，再执行循环体中的SQL语句。具体语法为：</p>
+<blockquote>
+<p>先判定条件，如果条件为true，则执行逻辑，否则，不执行逻辑</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">WHILE 条件 DO</span><br><span class="line">    <span class="keyword">SQL</span>逻辑...    </span><br><span class="line"><span class="keyword">END</span> WHILE;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例</strong></p>
+<p>计算从1累加到n的值，n为传入的参数值。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> p6(<span class="keyword">in</span> n <span class="type">int</span>)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">declare</span> total <span class="type">int</span> <span class="keyword">default</span> <span class="number">0</span>;</span><br><span class="line">    while n<span class="operator">&gt;</span><span class="number">0</span> do</span><br><span class="line">        <span class="keyword">set</span> total :<span class="operator">=</span> total<span class="operator">+</span>n;</span><br><span class="line">        <span class="keyword">set</span> n :<span class="operator">=</span> n<span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">end</span> while;</span><br><span class="line">    <span class="keyword">select</span> total;</span><br><span class="line"><span class="keyword">end</span>;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="repeat"><a href="#repeat" class="headerlink" title="repeat"></a>repeat</h2><p>repeat是有条件的循环控制语句, 当满足until声明的条件的时候，则退出循环 。具体语法为：</p>
+<blockquote>
+<p>先执行一次逻辑，然后判定UNTIL条件是否满足，如果满足，则退出。如果不满足，则继续下一次循环，<strong>直到满足某个条件</strong>退出循环</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">REPEAT</span><br><span class="line">    <span class="keyword">SQL</span>逻辑...  </span><br><span class="line">    UNTIL  条件</span><br><span class="line"><span class="keyword">END</span> REPEAT;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例</strong></p>
+<p>计算从1累加到n的值，n为传入的参数值。(使用repeat实现)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> p7(<span class="keyword">in</span> n <span class="type">int</span>)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">declare</span> total <span class="type">int</span> <span class="keyword">default</span> <span class="number">0</span>;</span><br><span class="line">    repeat</span><br><span class="line">        <span class="keyword">set</span> total :<span class="operator">=</span> total <span class="operator">+</span>n;</span><br><span class="line">        <span class="keyword">set</span> n :<span class="operator">=</span> n<span class="number">-1</span>;</span><br><span class="line">    until n <span class="operator">=</span><span class="number">0</span> <span class="keyword">end</span> repeat;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">select</span> total;</span><br><span class="line"><span class="keyword">end</span>;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="loop"><a href="#loop" class="headerlink" title="loop"></a>loop</h2><blockquote>
+<p>LOOP 实现简单的循环，如果不在SQL逻辑中增加退出循环的条件，可以用其来<strong>实现简单的死循环</strong>。 LOOP可以配合一下两个语句使用：</p>
+</blockquote>
+<ul>
+<li>LEAVE ：配合循环使用，<strong>退出循环</strong>。</li>
+<li>ITERATE：必须用在循环中，作用是跳过当前循环剩下的语句，<strong>直接进入下一次循环</strong>。</li>
+</ul>
+<blockquote>
+<p>下面语法中出现的 begin_label，end_label，label 指的都是我们所自定义的标记。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[begin_label:]  LOOP</span><br><span class="line">    <span class="keyword">SQL</span>逻辑...  </span><br><span class="line"><span class="keyword">END</span>  LOOP  [end_label];</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LEAVE  label;   <span class="comment">-- 退出指定标记的循环体</span></span><br><span class="line">ITERATE  label; <span class="comment">-- 直接进入下一次循环</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>案例1</strong></p>
+<p>计算从1累加到n的值，n为传入的参数值。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> p8(<span class="keyword">in</span> n <span class="type">int</span>)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">declare</span> total <span class="type">int</span> <span class="keyword">default</span> <span class="number">0</span>;</span><br><span class="line">    sum:loop</span><br><span class="line">        if n<span class="operator">&lt;=</span><span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">            leave sum;</span><br><span class="line">        <span class="keyword">end</span> if;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">set</span> total :<span class="operator">=</span>total<span class="operator">+</span>n;</span><br><span class="line">        <span class="keyword">set</span> n :<span class="operator">=</span>n<span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">end</span> loop sum;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">select</span> total;</span><br><span class="line"><span class="keyword">end</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例2</strong></p>
+<p>计算从1到n之间的<strong>偶数</strong>累加的值，n为传入的参数值。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> p9(<span class="keyword">in</span> n <span class="type">int</span>)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">declare</span> total <span class="type">int</span> <span class="keyword">default</span> <span class="number">0</span>;</span><br><span class="line">    sum:loop</span><br><span class="line">        if n<span class="operator">&lt;=</span><span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">            leave sum;</span><br><span class="line">        <span class="keyword">end</span> if;</span><br><span class="line"></span><br><span class="line">        if n<span class="operator">%</span><span class="number">2</span><span class="operator">=</span><span class="number">1</span> <span class="keyword">then</span></span><br><span class="line">            <span class="keyword">set</span> n :<span class="operator">=</span>n<span class="number">-1</span>;</span><br><span class="line">            iterate sum;</span><br><span class="line">        <span class="keyword">end</span> if;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">set</span> total :<span class="operator">=</span>total<span class="operator">+</span>n;</span><br><span class="line">        <span class="keyword">set</span> n :<span class="operator">=</span>n<span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">end</span> loop sum;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">select</span> total;</span><br><span class="line"><span class="keyword">end</span>;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="cursor"><a href="#cursor" class="headerlink" title="cursor"></a>cursor</h2><blockquote>
+<p>游标（CURSOR）是用来<strong>存储查询结果集</strong>的数据类型 , 在存储过程和函数中可以使用游标对结果集进行循环的处理。游标的使用包括游标的声明、OPEN、FETCH 和 CLOSE，其语法分别如下。</p>
+</blockquote>
+<ol>
+<li>声明游标</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DECLARE</span> 游标名称 <span class="keyword">CURSOR</span> <span class="keyword">FOR</span> 查询语句 ;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>打开游标</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">OPEN</span> 游标名称 ;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>获取游标记录</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FETCH</span> 游标名称 <span class="keyword">INTO</span> 变量 [, 变量 ] ;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>关闭游标</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CLOSE</span> 游标名称 ;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例</strong></p>
+<p>根据传入的参数uage，来查询用户表<code>tb_user</code>中，所有的用户年龄小于等于uage的用户姓名 （name）和专业（profession），并将用户的姓名和专业插入到所创建的一张新表 (id,name,profession)中。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> p11(<span class="keyword">in</span> uage <span class="type">int</span>)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">declare</span> uname <span class="type">varchar</span>(<span class="number">100</span>);</span><br><span class="line">    <span class="keyword">declare</span> upro <span class="type">varchar</span>(<span class="number">100</span>);</span><br><span class="line">    <span class="keyword">declare</span> u_cursor <span class="keyword">cursor</span> <span class="keyword">for</span> <span class="keyword">select</span> name,profession <span class="keyword">from</span> tb_user <span class="keyword">where</span> age <span class="operator">&lt;=</span> uage;</span><br><span class="line">    <span class="keyword">drop</span> <span class="keyword">table</span> if <span class="keyword">exists</span> tb_user_pro;</span><br><span class="line">    <span class="keyword">create table</span> if <span class="keyword">not</span> <span class="keyword">exists</span> tb_user_pro(</span><br><span class="line">         id <span class="type">int</span> <span class="keyword">primary key</span> auto_increment,</span><br><span class="line">         name <span class="type">varchar</span>(<span class="number">100</span>),</span><br><span class="line">         profession <span class="type">varchar</span>(<span class="number">100</span>)</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">open</span> u_cursor;</span><br><span class="line">    while <span class="literal">true</span> do</span><br><span class="line">         <span class="keyword">fetch</span> u_cursor <span class="keyword">into</span> uname,upro;</span><br><span class="line">         <span class="keyword">insert into</span> tb_user_pro <span class="keyword">values</span> (<span class="keyword">null</span>, uname, upro);</span><br><span class="line">    <span class="keyword">end</span> while;</span><br><span class="line">    <span class="keyword">close</span> u_cursor;</span><br><span class="line"><span class="keyword">end</span>;</span><br></pre></td></tr></table></figure>
+
+<p>但是当我们执行过后会报错</p>
+<blockquote>
+<p>找不到数据。</p>
+</blockquote>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804191347653.5xay451h3w.webp"
+                         alt="image-20250804191347653" 
+                 >
+
+<p>我们在循环中用游标不断填写数据的时候，到最后一次它没有数据了，就会跳出循环，但是这时就会报错，那我们怎么解决呢？</p>
+<p>要想解决这个问题，就需要通过MySQL中提供的 条件处理程序 Handler 来解决</p>
+<hr>
+<h2 id="条件处理程序"><a href="#条件处理程序" class="headerlink" title="条件处理程序"></a>条件处理程序</h2><blockquote>
+<p><strong>条件处理程序（Handler）<strong>可以用来定义在流程控制结构执行过程中</strong>遇到问题时相应的处理步骤</strong>。具体语法为：</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- for后面跟上的就是条件，满足什么样的条件我才执行handle这个动作</span></span><br><span class="line"><span class="comment">-- statement：具体的SQL逻辑</span></span><br><span class="line"><span class="keyword">DECLARE</span> handler_action HANDLER <span class="keyword">FOR</span> condition_value [, condition_value]... statement; </span><br><span class="line"></span><br><span class="line">handler_action 的取值：  </span><br><span class="line">    CONTINUE: 继续执行当前程序</span><br><span class="line">    EXIT: 终止执行当前程序</span><br><span class="line">condition_value 的取值： </span><br><span class="line">    <span class="keyword">SQLSTATE</span>  sqlstate_value: 状态码，如 <span class="number">02000</span> <span class="comment">-- 当我们执行SQL的时候，它抛出的SQL语句的状态码来决定到底执行continue还是exit</span></span><br><span class="line">    <span class="keyword">SQLWARNING</span>: 所有以<span class="number">01</span>开头的<span class="keyword">SQLSTATE</span>代码的简写，<span class="keyword">SQL</span>警告</span><br><span class="line">    <span class="keyword">NOT</span> FOUND: 所有以<span class="number">02</span>开头的<span class="keyword">SQLSTATE</span>代码的简写，没有找到</span><br><span class="line">    <span class="keyword">SQLEXCEPTION</span>: 所有没有被<span class="keyword">SQLWARNING</span> 或 <span class="keyword">NOT</span> FOUND 捕获的<span class="keyword">SQLSTATE</span>代码的简写</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>我们继续来完成在上一小节提出的这个需求，并解决其中的问题。</p>
+<ul>
+<li>通过SQLSTATE指定具体的状态码(02000)</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> exit handler <span class="keyword">for</span> <span class="keyword">SQLSTATE</span> <span class="string">&#x27;02000&#x27;</span> <span class="keyword">close</span> u_cursor;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里的SQLSTATE的值其实就是上面报错的SQL状态码，表示只要出现这种情况，我们就会退出当前程序。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> p11(<span class="keyword">in</span> uage <span class="type">int</span>)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">declare</span> uname <span class="type">varchar</span>(<span class="number">100</span>);</span><br><span class="line">    <span class="keyword">declare</span> upro <span class="type">varchar</span>(<span class="number">100</span>);</span><br><span class="line">    <span class="keyword">declare</span> u_cursor <span class="keyword">cursor</span> <span class="keyword">for</span> <span class="keyword">select</span> name,profession <span class="keyword">from</span> tb_user <span class="keyword">where</span> age <span class="operator">&lt;=</span> uage;</span><br><span class="line">    <span class="keyword">declare</span> exit handler <span class="keyword">for</span> <span class="keyword">SQLSTATE</span> <span class="string">&#x27;02000&#x27;</span> <span class="keyword">close</span> u_cursor;  <span class="comment">-- 也可以写作 not found</span></span><br><span class="line">    <span class="keyword">drop</span> <span class="keyword">table</span> if <span class="keyword">exists</span> tb_user_pro;</span><br><span class="line">    <span class="keyword">create table</span> if <span class="keyword">not</span> <span class="keyword">exists</span> tb_user_pro(</span><br><span class="line">         id <span class="type">int</span> <span class="keyword">primary key</span> auto_increment,</span><br><span class="line">         name <span class="type">varchar</span>(<span class="number">100</span>),</span><br><span class="line">         profession <span class="type">varchar</span>(<span class="number">100</span>)</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">open</span> u_cursor;</span><br><span class="line">    while <span class="literal">true</span> do</span><br><span class="line">         <span class="keyword">fetch</span> u_cursor <span class="keyword">into</span> uname,upro;</span><br><span class="line">         <span class="keyword">insert into</span> tb_user_pro <span class="keyword">values</span> (<span class="keyword">null</span>, uname, upro);</span><br><span class="line">    <span class="keyword">end</span> while;</span><br><span class="line">    <span class="keyword">close</span> u_cursor;</span><br><span class="line"><span class="keyword">end</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这次不报错了：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804192229909.2a5egm5om4.webp"
+                         alt="image-20250804192229909" 
+                 >
+
+<p>表中也有对应数据：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804192244872.9rjpn3jf19.webp"
+                         alt="image-20250804192244872" 
+                 >
+
+<blockquote>
+<p>具体的错误状态码，可以参考官方文档： </p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/declare-handler.html" >https://dev.mysql.com/doc/refman/8.0/en/declare-handler.html<i class="fas fa-external-link-alt"></i></a>  </p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://dev.mysql.com/doc/mysql-errors/8.0/en/server-error-reference.html" >https://dev.mysql.com/doc/mysql-errors/8.0/en/server-error-reference.html<i class="fas fa-external-link-alt"></i></a></p>
+</blockquote>
+<hr>
+<h1 id="存储函数"><a href="#存储函数" class="headerlink" title="存储函数"></a>存储函数</h1><blockquote>
+<p>存储函数是<strong>有返回值</strong>的存储过程，存储函数的<strong>参数只能是IN类型</strong>的。</p>
+</blockquote>
+<p>具体语法如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span>  <span class="keyword">FUNCTION</span>   存储函数名称 ([ 参数列表 ])</span><br><span class="line"><span class="keyword">RETURNS</span>  type  [characteristic ...]</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="comment">-- SQL语句</span></span><br><span class="line">	<span class="keyword">RETURN</span> ...;</span><br><span class="line"><span class="keyword">END</span> ;</span><br></pre></td></tr></table></figure>
+
+<p><strong>characteristic说明：</strong> </p>
+<ol>
+<li>DETERMINISTIC：相同的输入参数总是产生相同的结果。</li>
+<li>NO SQL ：<strong>不包含SQL语句</strong>。 </li>
+<li>READS SQL DATA：<strong>包含读取</strong>数据的语句，但不包含写入数据的语句。</li>
+</ol>
+<p><strong>案例</strong></p>
+<p>计算从1累加到n的值，n为传入的参数值。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">function</span> fun1(n <span class="type">int</span>)</span><br><span class="line"><span class="keyword">returns</span> <span class="type">int</span> <span class="keyword">deterministic</span></span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">declare</span> total <span class="type">int</span> <span class="keyword">default</span> <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">    while n<span class="operator">&gt;</span><span class="number">0</span> do</span><br><span class="line">        <span class="keyword">set</span> total :<span class="operator">=</span> total <span class="operator">+</span> n;</span><br><span class="line">        <span class="keyword">set</span> n :<span class="operator">=</span> n <span class="operator">-</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">end</span> while;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> total;</span><br><span class="line"><span class="keyword">end</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>PS：其实用的很少，因为存储函数能解决的，存储过程肯定也可以。</p>
+</blockquote>
+<hr>
+<h1 id="触发器"><a href="#触发器" class="headerlink" title="触发器"></a>触发器</h1><blockquote>
+<p>触发器是<strong>与表有关的数据库对象</strong>，指在insert&#x2F;update&#x2F;delete之前(BEFORE)或之后(AFTER)，<strong>触发并执行</strong>触发器中定义的SQL语句集合。触发器的这种特性可以协助应用在数据库端确保数据的<strong>完整性  , 日志记录 , 数据校验</strong>等操作 。</p>
+</blockquote>
+<p>使用别名<code>OLD</code>和<code>NEW</code>来引用触发器中<strong>发生变化的记录内容</strong>，这与其他的数据库是相似的。现在触发器还只支持<strong>行级触发</strong>，不支持语句级触发。</p>
+<table>
+<thead>
+<tr>
+<th>触发器类型</th>
+<th>new和old</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>INSERT 型触发器</td>
+<td>NEW表示将要或者已经新增的数据</td>
+</tr>
+<tr>
+<td>UPDATE 型触发器</td>
+<td>OLD表示修改之前的数据 ,NEW表示将要或已经修改后的数据</td>
+</tr>
+<tr>
+<td>DELETE 型触发器</td>
+<td>OLD表示将要或者已经删除的数据</td>
+</tr>
+</tbody></table>
+<h2 id="语法-1"><a href="#语法-1" class="headerlink" title="语法"></a>语法</h2><h3 id="创建-2"><a href="#创建-2" class="headerlink" title="创建"></a>创建</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> trigger_name </span><br><span class="line">BEFORE<span class="operator">/</span>AFTER  <span class="keyword">INSERT</span><span class="operator">/</span><span class="keyword">UPDATE</span><span class="operator">/</span><span class="keyword">DELETE</span></span><br><span class="line"><span class="keyword">ON</span> tbl_name <span class="keyword">FOR</span> <span class="keyword">EACH</span> <span class="type">ROW</span>  <span class="comment">-- 行级触发器</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line"> trigger_stmt ;</span><br><span class="line"><span class="keyword">END</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看-1"><a href="#查看-1" class="headerlink" title="查看"></a>查看</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> TRIGGERS;</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除-2"><a href="#删除-2" class="headerlink" title="删除"></a>删除</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 如果没有指定 schema_name，默认为当前数据库 。</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TRIGGER</span> [schema_name.]trigger_name ;  </span><br></pre></td></tr></table></figure>
+
+<h2 id="案例-1"><a href="#案例-1" class="headerlink" title="案例"></a>案例</h2><p>通过触发器记录 tb_user 表的数据<strong>变更日志</strong>，将变更日志插入到日志表user_logs中, 包含增加,  修改 , 删除 ;</p>
+<p>表结构准备:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create table</span> user_logs(</span><br><span class="line">  id <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">not null</span> auto_increment,</span><br><span class="line">  operation <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">not null</span> comment <span class="string">&#x27;操作类型,insert/update/delete&#x27;</span>,</span><br><span class="line">  operate_time datetime <span class="keyword">not null</span> comment <span class="string">&#x27;操作时间&#x27;</span>,</span><br><span class="line">  operate_id <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">not null</span> comment <span class="string">&#x27;操作的ID&#x27;</span>,</span><br><span class="line">  operate_params <span class="type">varchar</span>(<span class="number">500</span>) comment <span class="string">&#x27;操作参数&#x27;</span>,</span><br><span class="line">  <span class="keyword">primary key</span>(`id`)</span><br><span class="line">)engine<span class="operator">=</span>innodb <span class="keyword">default</span> charset<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
+
+<h3 id="插入数据触发器"><a href="#插入数据触发器" class="headerlink" title="插入数据触发器"></a>插入数据触发器</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">trigger</span> tb_user_insert_trigger</span><br><span class="line">    after <span class="keyword">insert</span> <span class="keyword">on</span> tb_user <span class="keyword">for</span> <span class="keyword">each</span> <span class="type">row</span></span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">insert into</span> user_logs(id, operation, operate_time, operate_id, operate_params) <span class="keyword">values</span> </span><br><span class="line"> (<span class="keyword">null</span>, <span class="string">&#x27;insert&#x27;</span>, now(), new.id, </span><br><span class="line">  concat(<span class="string">&#x27;插入的数据内容为: id=&#x27;</span>,new.id,<span class="string">&#x27;,name=&#x27;</span>,new.name, <span class="string">&#x27;, phone=&#x27;</span>, NEW.phone, <span class="string">&#x27;, email=&#x27;</span>, NEW.email, <span class="string">&#x27;, profession=&#x27;</span>, NEW.profession));</span><br><span class="line"><span class="keyword">end</span>;</span><br></pre></td></tr></table></figure>
+
+<p>插入数据：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert into</span> tb_user(id, name, phone, email, profession, age, gender, status, createtime) <span class="keyword">VALUES</span> (<span class="number">26</span>,<span class="string">&#x27;三皇子&#x27;</span>,<span class="string">&#x27;18809091212&#x27;</span>,<span class="string">&#x27;erhuangzi@163.com&#x27;</span>,<span class="string">&#x27;软件工程&#x27;</span>,<span class="number">23</span>,<span class="string">&#x27;1&#x27;</span>,<span class="string">&#x27;1&#x27;</span>,now());</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804210202233.9rjpn3jf19.webp"
+                         alt="image-20250804210202233" 
+                 >
+
+<h3 id="更新数据触发器"><a href="#更新数据触发器" class="headerlink" title="更新数据触发器"></a>更新数据触发器</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">trigger</span> tb_user_update_trigger</span><br><span class="line">    after <span class="keyword">update</span> <span class="keyword">on</span> tb_user <span class="keyword">for</span> <span class="keyword">each</span> <span class="type">row</span></span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">insert into</span> user_logs(id, operation, operate_time, operate_id, operate_params) <span class="keyword">values</span></span><br><span class="line"> (<span class="keyword">null</span>, <span class="string">&#x27;update&#x27;</span>, now(), new.id,</span><br><span class="line"> concat(<span class="string">&#x27;更新之前的数据: id=&#x27;</span>,old.id,<span class="string">&#x27;,name=&#x27;</span>,old.name, <span class="string">&#x27;, phone=&#x27;</span>, old.phone, <span class="string">&#x27;, email=&#x27;</span>, old.email, <span class="string">&#x27;, profession=&#x27;</span>, old.profession,<span class="string">&#x27; | 更新之后的数据: id=&#x27;</span>,new.id,<span class="string">&#x27;,name=&#x27;</span>,new.name, <span class="string">&#x27;, phone=&#x27;</span>, NEW.phone, <span class="string">&#x27;, email=&#x27;</span>, NEW.email, <span class="string">&#x27;, profession=&#x27;</span>, NEW.profession));</span><br><span class="line"><span class="keyword">end</span>;</span><br></pre></td></tr></table></figure>
+
+<p>更新数据：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> tb_user <span class="keyword">set</span> profession <span class="operator">=</span> <span class="string">&#x27;会计&#x27;</span> <span class="keyword">where</span> id <span class="operator">&lt;=</span> <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>可以看见插入了五条日志，这是因为MySQL只支持行级触发器，这里更新五条数据就是五条日志了。</p>
+</blockquote>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804210212971.2obu7hdzha.webp"
+                         alt="image-20250804210212971" 
+                 >
+
+<h3 id="删除数据触发器"><a href="#删除数据触发器" class="headerlink" title="删除数据触发器"></a>删除数据触发器</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">trigger</span> tb_user_delete_trigger</span><br><span class="line">    after <span class="keyword">delete</span> <span class="keyword">on</span> tb_user <span class="keyword">for</span> <span class="keyword">each</span> <span class="type">row</span></span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">insert into</span> user_logs(id, operation, operate_time, operate_id, operate_params) <span class="keyword">values</span> </span><br><span class="line"> (<span class="keyword">null</span>, <span class="string">&#x27;delete&#x27;</span>, now(), old.id,</span><br><span class="line"> concat(<span class="string">&#x27;删除之前的数据: id=&#x27;</span>,old.id,<span class="string">&#x27;,name=&#x27;</span>,old.name, <span class="string">&#x27;, phone=&#x27;</span>,old.phone, <span class="string">&#x27;, email=&#x27;</span>, old.email, <span class="string">&#x27;, profession=&#x27;</span>, old.profession));</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p>删除数据：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> tb_user <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">26</span>;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL视图/image-20250804210253450.2obu7hdzhb.webp"
+                         alt="image-20250804210253450" 
+                 >
+
+
+
+
+
+
+
+
+                    
+                </div>
+
+                
+
+                <div class="post-bottom-tags-and-share border-box">
+                    <div>
+                        
+                            <ul class="post-tags-box border-box">
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/MySQL/">MySQL</a>
+                                    </li>
+                                
+                            </ul>
+                        
+                    </div>
+                    <div>
+                        
+                    </div>
+                </div>
+
+                
+
+                
+                    <div class="post-nav border-box">
+                        
+                        
+                            <div class="next-post">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2025/07/31/MySQl-%E4%BA%8B%E5%8A%A1/"
+                                   title="MySQl--事务"
+                                >
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">MySQl--事务</span>
+                                        <span class="post-nav-item">Next posts</span>
+                                    </span>
+                                    <span class="right arrow-icon flex-center">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                    </div>
+                
+
+                
+                    
+
+
+
+
+
+
+                
+            </div>
+        </div>
+
+        
+            <div class="pc-post-toc right-toc">
+                <div class="post-toc-wrap border-box">
+    <div class="post-toc border-box">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%86%E5%9B%BE"><span class="nav-text">视图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95"><span class="nav-text">语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA"><span class="nav-text">创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2"><span class="nav-text">查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9"><span class="nav-text">修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4"><span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E9%80%89%E9%A1%B9"><span class="nav-text">检查选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CASCADED"><span class="nav-text">CASCADED</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#local"><span class="nav-text">local</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0"><span class="nav-text">更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8"><span class="nav-text">作用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B"><span class="nav-text">案例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="nav-text">存储过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E7%82%B9"><span class="nav-text">特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="nav-text">基本语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-1"><span class="nav-text">创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E7%94%A8"><span class="nav-text">调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B"><span class="nav-text">查看</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4-1"><span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E9%87%8F"><span class="nav-text">变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F"><span class="nav-text">系统变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E5%AE%9A%E4%B9%89%E5%8F%98%E9%87%8F"><span class="nav-text">用户定义变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F"><span class="nav-text">局部变量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#if"><span class="nav-text">if</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0"><span class="nav-text">参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#case"><span class="nav-text">case</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#while"><span class="nav-text">while</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#repeat"><span class="nav-text">repeat</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#loop"><span class="nav-text">loop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cursor"><span class="nav-text">cursor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F"><span class="nav-text">条件处理程序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%87%BD%E6%95%B0"><span class="nav-text">存储函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="nav-text">触发器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95-1"><span class="nav-text">语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-2"><span class="nav-text">创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B-1"><span class="nav-text">查看</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4-2"><span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B-1"><span class="nav-text">案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="nav-text">插入数据触发器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E6%95%B0%E6%8D%AE%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="nav-text">更新数据触发器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="nav-text">删除数据触发器</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="copyright-info info-item">
+    &copy;&nbsp;2025
+    
+            &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">T00</a>
+        
+    </div>
+
+    <div class="theme-info info-item">
+        Powered by&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;&&nbsp;Theme&nbsp;<a class="keep-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep</a>
+    </div>
+
+    
+
+    
+        <div class="count-info info-item">
+            
+                <span class="count-item border-box word">
+                    <span class="item-type border-box">Total words</span>
+                    <span class="item-value border-box word">33.5k</span>
+                </span>
+            
+
+            
+                <span class="count-item border-box uv">
+                    <span class="item-type border-box">Unique Visitor</span>
+                    <span class="item-value border-box uv" id="busuanzi_value_site_uv"></span>
+                </span>
+            
+
+            
+                <span class="count-item border-box pv">
+                    <span class="item-type border-box">Page View</span>
+                    <span class="item-value border-box pv" id="busuanzi_value_site_pv"></span>
+                </span>
+            
+        </div>
+    
+
+    
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools right-toc">
+            <div class="post-tools-container border-box">
+    <ul class="post-tools-list border-box">
+        <!-- PC encrypt again -->
+        
+
+        <!-- PC TOC show toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- PC go comment -->
+        
+
+        <!-- PC full screen -->
+        <li class="tools-item flex-center full-screen">
+            <i class="fa-solid fa-expand"></i>
+        </li>
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container border-box ">
+    <ul class="side-tools-list side-tools-show-handle border-box">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <!-- toggle mode -->
+        
+            <li class="tools-item tool-toggle-theme-mode flex-center">
+                <i class="fas fa-moon"></i>
+            </li>
+        
+
+        <!-- rss -->
+        
+
+        <!-- to bottom -->
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list border-box">
+        
+            <li class="tools-item toggle-show-toc-tablet flex-center">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-top flex-center show-arrow">
+            <i class="arrow fas fa-arrow-up"></i>
+            <span class="percent"></span>
+        </li>
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+        <div class="tablet-post-toc-mask">
+            <div class="tablet-post-toc">
+                <div class="post-toc-wrap border-box">
+    <div class="post-toc border-box">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%86%E5%9B%BE"><span class="nav-text">视图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95"><span class="nav-text">语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA"><span class="nav-text">创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2"><span class="nav-text">查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9"><span class="nav-text">修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4"><span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E9%80%89%E9%A1%B9"><span class="nav-text">检查选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CASCADED"><span class="nav-text">CASCADED</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#local"><span class="nav-text">local</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0"><span class="nav-text">更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8"><span class="nav-text">作用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B"><span class="nav-text">案例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="nav-text">存储过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E7%82%B9"><span class="nav-text">特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="nav-text">基本语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-1"><span class="nav-text">创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E7%94%A8"><span class="nav-text">调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B"><span class="nav-text">查看</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4-1"><span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E9%87%8F"><span class="nav-text">变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F"><span class="nav-text">系统变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E5%AE%9A%E4%B9%89%E5%8F%98%E9%87%8F"><span class="nav-text">用户定义变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F"><span class="nav-text">局部变量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#if"><span class="nav-text">if</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0"><span class="nav-text">参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#case"><span class="nav-text">case</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#while"><span class="nav-text">while</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#repeat"><span class="nav-text">repeat</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#loop"><span class="nav-text">loop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cursor"><span class="nav-text">cursor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F"><span class="nav-text">条件处理程序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%87%BD%E6%95%B0"><span class="nav-text">存储函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="nav-text">触发器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95-1"><span class="nav-text">语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-2"><span class="nav-text">创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B-1"><span class="nav-text">查看</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4-2"><span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B-1"><span class="nav-text">案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="nav-text">插入数据触发器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E6%95%B0%E6%8D%AE%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="nav-text">更新数据触发器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="nav-text">删除数据触发器</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+
+            </div>
+        </div>
+    
+</main>
+
+
+
+
+
+<!-- common js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/header-shrink.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/back2top.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/toggle-theme.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/code-block.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/anime.min.js"></script>
+
+<!-- local search -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/local-search.min.js"></script>
+
+
+<!-- lazyload -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/lazyload.min.js"></script>
+
+
+<div class="pjax">
+    <!-- home page -->
+    
+
+    <!-- post page -->
+    
+        <!-- post-helper -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/post-helper.min.js"></script>
+
+        <!-- toc -->
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/toc.min.js"></script>
+        
+
+        <!-- copyright-info -->
+        
+
+        <!-- share -->
+        
+    
+
+    <!-- categories page -->
+    
+
+    <!-- links page -->
+    
+
+    <!-- photos page -->
+    
+
+    <!-- tools page -->
+    
+</div>
+
+<!-- mermaid -->
+
+
+<!-- pjax -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart()
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd()
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'))
+            KEEP.initExecute()
+        });
+    });
+</script>
+
+
+
+
+</body>
+</html>
