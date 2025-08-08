@@ -264,16 +264,38 @@
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Thu Jul 31 2025 12:21:13 GMT+0800">2025-07-31 12:21:13</span>
+                    <span class="datetime" data-updated="Fri Aug 08 2025 21:32:53 GMT+0800">2025-08-08 21:32:53</span>
                 </span>
             
         
 
         
-
+            <span class="meta-info-item post-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="post-category-ul">
+                    
+                            <li class="category-item"><a href="/categories/MySQL/">MySQL</a></li>
+                        
+                    
+                </ul>
+            </span>
         
 
         
+            <span class="post-tag meta-info-item border-box">
+                <ul class="post-tag-ul">
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/MySQL/">MySQL</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+        
+            <span class="meta-info-item post-wordcount">
+                <i class="icon fas fa-file-word"></i>&nbsp;<span>7.1k Words</span>
+            </span>
         
         
         
@@ -295,7 +317,1132 @@
                     
 
                     
-                         
+                         <h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p>在学习MySQL之前，我们先来了解数据库：<strong>英文为 DataBase，简称DB，它是存储和管理数据的仓库</strong>。</p>
+<p>数据是存储在数据库中的，那我们要如何来操作数据库以及数据库中所存放的数据呢？</p>
+<p>那这里呢，会涉及到一个系统，那就是<strong>数据库管理系统</strong>：<strong>数据库管理系统（DataBase Management System，简称DBMS），是操作和管理数据库的大型软件</strong>。</p>
+<p>那具体DBMS是怎么操控数据库的呢？</p>
+<p>我们会给DBMS发送一条指令，告诉这个软件我们要执行的是什么样的操作，要对哪个数据进行操作。而这个指令就是<strong>SQL语句</strong>：SQL（Structured Query Language，简称SQL）：结构化查询语言，它是操作关系型数据库的编程语言，定义了一套操作关系型数据库的统一标准。</p>
+<p>在我们搞清楚这些最基本的概念之后，我们就可以开始学习MySQL了。</p>
+<hr>
+<h1 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h1><h2 id="关系型数据库（RDBMS）"><a href="#关系型数据库（RDBMS）" class="headerlink" title="关系型数据库（RDBMS）"></a>关系型数据库（RDBMS）</h2><p>建立在关系模型基础上，由多张相互连接的<strong>二维表</strong>组成的数据库。而所谓二维表，指的是由行和列组成的表：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250329133929477.1sfcxpdow9.webp"
+                         alt="image-20250329133929477" 
+                 >
+
+<p>二维表的优点：</p>
+<ul>
+<li>使用表存储数据，格式统一，便于维护</li>
+<li>使用SQL语言操作，标准统一，使用方便，可用于复杂查询</li>
+</ul>
+<p>**结论：**基于二维表存储数据的数据库就成为关系型数据库，不是基于二维表存储数据的数据库，就是非关系型数据库（比如后面要学习的Redis，就属于非关系型数据库）。</p>
+<h2 id="数据模型-1"><a href="#数据模型-1" class="headerlink" title="数据模型"></a>数据模型</h2><ul>
+<li>通过MySQL客户端连接数据库管理系统DBMS，然后通过DBMS操作数据库。</li>
+<li>使用MySQL客户端，向数据库管理系统发送一条<strong>SQL语句</strong>，由数据库管理系统根据SQL语句指令去<strong>操作数据库中的表结构及数据</strong>。</li>
+<li>一个数据库服务器中可以创建多个数据库，一个数据库中也可以包含多张表，而一张表中又可以包含多行记录。</li>
+</ul>
+<p>如图：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250329142246500.67xs2ypryn.webp"
+                         alt="image-20250329142246500" 
+                 >
+
+<p>所以在Mysql数据库服务器当中存储数据，你需要：</p>
+<ol>
+<li>先去<strong>创建数据库</strong>（可以创建多个数据库，之间是相互独立的）。</li>
+<li>在数据库下再去<strong>创建数据表</strong>（一个数据库下可以创建多张表）。</li>
+<li>再将<strong>数据存放在数据表</strong>中（一张表可以存储多行数据）。</li>
+</ol>
+<hr>
+<h1 id="SQL"><a href="#SQL" class="headerlink" title="SQL"></a>SQL</h1><blockquote>
+<p>SQL：结构化查询语言。一门操作关系型数据库的编程语言，定义操作所有关系型数据库的统一标准。SQL语句根据其功能被分为四大类：DDL、DML、DQL、DCL (前三个更重要)</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>分类</th>
+<th>全称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DDL</td>
+<td>Data Definition Language</td>
+<td>数据定义语言，用来定义数据库对象(数据库，表，字段)</td>
+</tr>
+<tr>
+<td>DML</td>
+<td>Data Manipulation Language</td>
+<td>数据操作语言，用来对数据库表中的数据进行增删改</td>
+</tr>
+<tr>
+<td>DQL</td>
+<td>Data Query Language</td>
+<td>数据查询语言，用来查询数据库中表的记录</td>
+</tr>
+<tr>
+<td>DCL</td>
+<td>Data Control Language</td>
+<td>数据控制语言，用来创建数据库用户、控制数据库的访问权限</td>
+</tr>
+</tbody></table>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250329142246500.67xs2ypryn.webp"
+                         alt="image-20250329142246500" 
+                 >
+
+<p>接下来就来一个个解析：</p>
+<h2 id="DDL"><a href="#DDL" class="headerlink" title="DDL"></a>DDL</h2><h3 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h3><blockquote>
+<p>我们在进行<strong>数据库设计</strong>时，需要使用到刚才所介绍SQL分类中的DDL语句。</p>
+</blockquote>
+<blockquote>
+<p>DDL英文全称是Data Definition Language(数据定义语言)，用来定义数据库对象(数据库、表)。</p>
+</blockquote>
+<p>DDL中数据库的常见操作：<strong>查询、创建、使用、删除</strong></p>
+<h4 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h4><ul>
+<li>查询所有数据库</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> databases;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250329143554507.1vyyvf6hn5.webp"
+                         alt="image-20250329143554507" align='left'
+                 >
+
+<ul>
+<li>查询当前数据库</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> database();</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250329143659355.7lkb700v9f.webp"
+                         alt="image-20250329143659355" align='left'
+                 >
+
+<ul>
+<li>我们要操作某一个数据库，必须要切换到对应的数据库中。</li>
+</ul>
+<p>也可以借助图形化界面工具DataGrip直接看见：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250329151712991.45hzewrhxm.webp"
+                         alt="image-20250329151712991" align='left'
+                 >
+
+<p>创建</p>
+<ul>
+<li>案例： 创建一个db01数据库。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> database db01;</span><br></pre></td></tr></table></figure>
+
+<p>注意：在同一个数据库服务器中，不能创建两个名称相同的数据库，否则将会报错</p>
+<p>可以使用<code>if not exists</code>来避免这个问题</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">/</span><span class="operator">/</span>数据库不存在,则创建该数据库；如果存在则不创建</span><br><span class="line"><span class="keyword">create</span> database if <span class="keyword">not</span> <span class="keyword">exists</span> itcast; </span><br></pre></td></tr></table></figure>
+
+<h4 id="使用（切换）"><a href="#使用（切换）" class="headerlink" title="使用（切换）"></a>使用（切换）</h4><ul>
+<li>案例：切换到itcast数据</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use db01;</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h4><ul>
+<li><p>语法:</p>
+<ul>
+<li><pre><code class="language-SQL">drop database [ if exists ] 数据库名 ;
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  - 如果删除一个不存在的数据库，将会报错。</span><br><span class="line"></span><br><span class="line">  - 可以加上参数 if exists ，如果数据库存在，再执行删除，否则不执行删除。</span><br><span class="line"></span><br><span class="line">- 案例：删除db01数据库</span><br><span class="line"></span><br><span class="line">  - ```SQL</span><br><span class="line">    drop database if exists db01;</span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h3><p>选择原则：在<strong>满足业务需求的前提下</strong>, 尽可能选择占用磁盘空间小的数据类型</p>
+<h4 id="数值类型"><a href="#数值类型" class="headerlink" title="数值类型"></a>数值类型</h4><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>大小(byte)</th>
+<th>描述</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>tinyint</td>
+<td>1</td>
+<td>小整数值</td>
+<td></td>
+</tr>
+<tr>
+<td>smallint</td>
+<td>2</td>
+<td>大整数值</td>
+<td></td>
+</tr>
+<tr>
+<td>mediumint</td>
+<td>3</td>
+<td>大整数值</td>
+<td></td>
+</tr>
+<tr>
+<td>int</td>
+<td>4</td>
+<td>大整数值</td>
+<td></td>
+</tr>
+<tr>
+<td>bigint</td>
+<td>8</td>
+<td>极大整数值</td>
+<td></td>
+</tr>
+<tr>
+<td>float</td>
+<td>4</td>
+<td>单精度浮点数值</td>
+<td>float(5,2)：5表示整个数字长度，2 表示小数位个数</td>
+</tr>
+<tr>
+<td>double</td>
+<td>8</td>
+<td>双精度浮点数值</td>
+<td>double(5,2)：5表示整个数字长度，2 表示小数位个数</td>
+</tr>
+<tr>
+<td>decimal</td>
+<td></td>
+<td>小数值(精度更高)</td>
+<td>decimal(5,2)：5表示整个数字长度，2 表示小数位个数</td>
+</tr>
+</tbody></table>
+<h4 id="字符串类型"><a href="#字符串类型" class="headerlink" title="字符串类型"></a>字符串类型</h4><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>大小</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>char</td>
+<td>0-255 bytes</td>
+<td>定长字符串</td>
+</tr>
+<tr>
+<td>varchar</td>
+<td>0-65535 bytes</td>
+<td>变长字符串</td>
+</tr>
+<tr>
+<td>tinyblob</td>
+<td>0-255 bytes</td>
+<td>不超过255个字符的二进制数据</td>
+</tr>
+<tr>
+<td>tinytext</td>
+<td>0-255 bytes</td>
+<td>短文本字符串</td>
+</tr>
+<tr>
+<td>blob</td>
+<td>0-65 535 bytes</td>
+<td>二进制形式的长文本数据</td>
+</tr>
+<tr>
+<td>text</td>
+<td>0-65 535 bytes</td>
+<td>长文本数据</td>
+</tr>
+<tr>
+<td>mediumblob</td>
+<td>0-16 777 215 bytes</td>
+<td>二进制形式的中等长度文本数据</td>
+</tr>
+<tr>
+<td>mediumtext</td>
+<td>0-16 777 215 bytes</td>
+<td>中等长度文本数据</td>
+</tr>
+<tr>
+<td>longblob</td>
+<td>0-4 294 967 295 bytes</td>
+<td>二进制形式的极大文本数据</td>
+</tr>
+<tr>
+<td>longtext</td>
+<td>0-4 294 967 295 bytes</td>
+<td>极大文本数据</td>
+</tr>
+</tbody></table>
+<ul>
+<li>blob存二进制，可以存音频视频，但用的少，视频等资源一般用文件系统管理，方便管理</li>
+</ul>
+<h4 id="char，vchar详解"><a href="#char，vchar详解" class="headerlink" title="char，vchar详解"></a>char，vchar详解</h4><p><strong>CHAR</strong>是<strong>固定长度</strong>的字符串类型，定义时需要指定固定长度，存储时会在<strong>末尾补足空格</strong>。CHAR适合存储<strong>长度固定的数据</strong>，如固 定长度的代码、状态等，存储空间固定，对于<strong>短字符串效率较高</strong>。</p>
+<p><strong>VARCHAR</strong>是<strong>可变长度</strong>的字符串类型，定义时需要<strong>指定最大长度</strong>，实际存储时根据<strong>实际长度占用存储空间</strong>。VARCHAR适合存储<strong>长度可变</strong>的数据，如用户输入的文本、备注等，<strong>节约存储空间</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>优势</th>
+<th>劣势</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>char</td>
+<td>性能略高</td>
+<td>浪费磁盘空间</td>
+</tr>
+<tr>
+<td>vchar</td>
+<td>节约磁盘空间</td>
+<td>性能略低</td>
+</tr>
+</tbody></table>
+<ul>
+<li>使用原则：固定长度使用char，不固定用vchar</li>
+</ul>
+<h4 id="日期时间类型"><a href="#日期时间类型" class="headerlink" title="日期时间类型"></a>日期时间类型</h4><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>大小(byte)</th>
+<th>范围</th>
+<th>格式</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>date</td>
+<td>3</td>
+<td>1000-01-01 至 9999-12-31</td>
+<td>YYYY-MM-DD</td>
+<td>日期值</td>
+</tr>
+<tr>
+<td>time</td>
+<td>3</td>
+<td>-838:59:59 至 838:59:59</td>
+<td>HH:MM:SS</td>
+<td>时间值或持续时间</td>
+</tr>
+<tr>
+<td>year</td>
+<td>1</td>
+<td>1901 至 2155</td>
+<td>YYYY</td>
+<td>年份值</td>
+</tr>
+<tr>
+<td>datetime</td>
+<td>8</td>
+<td>1000-01-01 00:00:00 至 9999-12-31 23:59:59</td>
+<td>YYYY-MM-DD HH:MM:SS</td>
+<td>混合日期和时间值</td>
+</tr>
+<tr>
+<td>timestamp</td>
+<td>4</td>
+<td>1970-01-01 00:00:01 至 2038-01-19 03:14:07</td>
+<td>YYYY-MM-DD HH:MM:SS</td>
+<td>混合日期和时间值，时间戳</td>
+</tr>
+</tbody></table>
+<h3 id="表结构"><a href="#表结构" class="headerlink" title="表结构"></a>表结构</h3><h4 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create table</span>  表名(</span><br><span class="line">        字段<span class="number">1</span>  字段<span class="number">1</span>类型 [约束]  [comment  字段<span class="number">1</span>注释 ],</span><br><span class="line">        字段<span class="number">2</span>  字段<span class="number">2</span>类型 [约束]  [comment  字段<span class="number">2</span>注释 ],</span><br><span class="line">        ......</span><br><span class="line">        字段n  字段n类型 [约束]  [comment  字段n注释 ] </span><br><span class="line">) [ comment  表注释 ] ;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>案例：创建user表</li>
+</ul>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250401182358923.70ankp6op8.webp"
+                         alt="image-20250401182358923" align='left'
+                 >
+
+<ul>
+<li>建表语句：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create table</span> tb_user (</span><br><span class="line">    id <span class="type">int</span> comment <span class="string">&#x27;ID,唯一标识&#x27;</span>,   # id是一行数据的唯一标识（不能重复）</span><br><span class="line">    username <span class="type">varchar</span>(<span class="number">20</span>) comment <span class="string">&#x27;用户名&#x27;</span>,</span><br><span class="line">    name <span class="type">varchar</span>(<span class="number">10</span>) comment <span class="string">&#x27;姓名&#x27;</span>,</span><br><span class="line">    age <span class="type">int</span> comment <span class="string">&#x27;年龄&#x27;</span>,</span><br><span class="line">    gender <span class="type">char</span>(<span class="number">1</span>) comment <span class="string">&#x27;性别&#x27;</span></span><br><span class="line">) comment <span class="string">&#x27;用户表&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>我们往里面添加数据（我这里就使用DataGrip添加了，因为文中还没提及insert语句）：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250401183744464.8ok0hvwyvn.webp"
+                         alt="image-20250401183744464" 
+                 >
+
+<blockquote>
+<p>可以看见即使拥有相同的id，也没有出现错误，这与我们前面提到的<strong>id字段是一行数据的唯一标识，不能有重复值</strong>相违背。这是为什么呢？</p>
+</blockquote>
+<p>其实我们现在创建表结构的时候， id这个字段我们只加了一个<strong>备注信息说明它是一个唯一标识</strong>，但是在<strong>数据库层面</strong>呢，并没有去<strong>限制字段存储的数据</strong>，所以id这个字段没有起到唯一标识的作用。</p>
+<p><strong>想要限制字段所存储的数据，就需要用到数据库中的约束。</strong></p>
+<p>这一点我们等会解析。</p>
+<h4 id="查询-1"><a href="#查询-1" class="headerlink" title="查询"></a>查询</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 查询当前数据库的所有表   ！直接看</span></span><br><span class="line"><span class="keyword">show</span> tables;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查看指定的表结构</span></span><br><span class="line"><span class="keyword">desc</span> 表名 ;   <span class="comment">-- 可以查看指定表的字段、字段的类型、是否可以为NULL、是否存在默认值等信息</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查询指定表的建表语句</span></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">create table</span> 表名 ;</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h4><ul>
+<li>添加字段</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 添加字段</span></span><br><span class="line"><span class="keyword">alter table</span> 表名 <span class="keyword">add</span>  字段名  类型(长度)  [comment 注释]  [约束];</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 比如： 为tb_emp表添加字段qq，字段类型为 varchar(11)</span></span><br><span class="line"><span class="keyword">alter table</span> tb_emp <span class="keyword">add</span>  qq  <span class="type">varchar</span>(<span class="number">11</span>) comment <span class="string">&#x27;QQ号码&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改字段</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 修改字段类型</span></span><br><span class="line"><span class="keyword">alter table</span> 表名 modify  字段名  新数据类型(长度);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 比如： 修改qq字段的字段类型，将其长度由11修改为13</span></span><br><span class="line"><span class="keyword">alter table</span> tb_emp modify qq <span class="type">varchar</span>(<span class="number">13</span>) comment <span class="string">&#x27;QQ号码&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 修改字段名，字段类型</span></span><br><span class="line"><span class="keyword">alter table</span> 表名 change  旧字段名  新字段名  类型(长度)  [comment 注释]  [约束];</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 比如： 修改qq字段名为 qq_num，字段类型varchar(13)</span></span><br><span class="line"><span class="keyword">alter table</span> tb_emp change qq qq_num <span class="type">varchar</span>(<span class="number">13</span>) comment <span class="string">&#x27;QQ号码&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除字段</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 删除字段</span></span><br><span class="line"><span class="keyword">alter table</span> 表名 <span class="keyword">drop</span> 字段名;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 比如： 删除tb_emp表中的qq_num字段</span></span><br><span class="line"><span class="keyword">alter table</span> tb_emp <span class="keyword">drop</span> qq_num;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改表名</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 修改表名</span></span><br><span class="line">rename <span class="keyword">table</span> 表名 <span class="keyword">to</span>  新表名;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 比如: 将当前的emp表的表名修改为tb_emp</span></span><br><span class="line">rename <span class="keyword">table</span> emp <span class="keyword">to</span> tb_emp;</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除-1"><a href="#删除-1" class="headerlink" title="删除"></a>删除</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 删除表</span></span><br><span class="line"><span class="keyword">drop</span>  <span class="keyword">table</span> [ if <span class="keyword">exists</span> ]  表名;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 比如：如果tb_emp表存在，则删除tb_emp表</span></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> if <span class="keyword">exists</span> tb_emp;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在删除表时，表中的全部数据也会被删除</li>
+</ul>
+<hr>
+<h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><blockquote>
+<p>概念：所谓约束就是作用在表中字段上的规则，用于限制存储在表中的数据</p>
+</blockquote>
+<ul>
+<li>作用：就是来保证数据库当中数据的正确性、有效性和完整性。（后面的学习会验证这些）</li>
+</ul>
+<p>在MySQL数据库当中，提供了以下5种约束：</p>
+<table>
+<thead>
+<tr>
+<th>约束</th>
+<th>描述</th>
+<th>关键字</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>非空约束</td>
+<td>限制该字段值<strong>不能为null</strong>.</td>
+<td>not null</td>
+</tr>
+<tr>
+<td>唯一约束</td>
+<td>保证字段的所有数据都是<strong>唯一、不重复的</strong>.</td>
+<td>unique</td>
+</tr>
+<tr>
+<td>主键约束</td>
+<td>主键是一行数据的<strong>唯一标识，要求非空且唯一</strong>。（一般还是自增的）</td>
+<td>primary key</td>
+</tr>
+<tr>
+<td>默认约束</td>
+<td>保存数据时，如果未指定该字段值，则采用默认值。</td>
+<td>default</td>
+</tr>
+<tr>
+<td>外键约束</td>
+<td>让<strong>两张表</strong>的数据建立连接，保证数据的一致性和完整性。</td>
+<td>foreign key</td>
+</tr>
+</tbody></table>
+<ul>
+<li>注意：约束是作用于表中字段上的，可以在<strong>创建表&#x2F;修改表的时候添加约束</strong>。</li>
+</ul>
+<hr>
+<p>对于刚才的案例，添加如下约束</p>
+<ul>
+<li>id 是一行数据的 <strong>唯一标识</strong></li>
+<li>username 用户名字段是<strong>非空</strong>且<strong>唯一</strong>的</li>
+<li>name 姓名字段是<strong>不允许存储空值</strong>的</li>
+<li>gender 性别字段是有<strong>默认值</strong>，默认为男</li>
+</ul>
+<p>创建语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create table</span> tb_user (</span><br><span class="line">    id <span class="type">int</span> <span class="keyword">primary key</span> comment <span class="string">&#x27;ID,唯一标识&#x27;</span>, </span><br><span class="line">    username <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">not null</span> <span class="keyword">unique</span> comment <span class="string">&#x27;用户名&#x27;</span>,</span><br><span class="line">    name <span class="type">varchar</span>(<span class="number">10</span>) <span class="keyword">not null</span> comment <span class="string">&#x27;姓名&#x27;</span>,</span><br><span class="line">    age <span class="type">int</span> comment <span class="string">&#x27;年龄&#x27;</span>,</span><br><span class="line">    gender <span class="type">char</span>(<span class="number">1</span>) <span class="keyword">default</span> <span class="string">&#x27;男&#x27;</span> comment <span class="string">&#x27;性别&#x27;</span></span><br><span class="line">) comment <span class="string">&#x27;用户表&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>一个语句要多个约束，不同约束之间用空格隔开</li>
+</ul>
+<p>在添加约束之后，可以看见我们刚刚创建的表就不能存在相同的id了。</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250401193728691.9gwvzmdklx.webp"
+                         alt="image-20250401193728691" align='left'
+                 >
+
+<hr>
+<h2 id="DML"><a href="#DML" class="headerlink" title="DML"></a>DML</h2><blockquote>
+<p>DML英文全称是Data Manipulation Language(数据操作语言)，用来对数据库中表的数据记录进行增、删、改操作</p>
+</blockquote>
+<ul>
+<li>添加数据（INSERT）</li>
+<li>修改数据（UPDATE）</li>
+<li>删除数据（DELETE）</li>
+</ul>
+<h3 id="增加"><a href="#增加" class="headerlink" title="增加"></a>增加</h3><ol>
+<li><h5 id="语法"><a href="#语法" class="headerlink" title="语法"></a><strong>语法</strong></h5></li>
+</ol>
+<ul>
+<li>向指定字段添加数据</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert into</span> 表名 (字段名<span class="number">1</span>, 字段名<span class="number">2</span>) <span class="keyword">values</span> (值<span class="number">1</span>, 值<span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>全部字段添加数据</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert into</span> 表名 <span class="keyword">values</span> (值<span class="number">1</span>, 值<span class="number">2</span>, ...);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>批量添加数据（指定字段）</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert into</span> 表名 (字段名<span class="number">1</span>, 字段名<span class="number">2</span>) <span class="keyword">values</span> (值<span class="number">1</span>, 值<span class="number">2</span>), (值<span class="number">1</span>, 值<span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>批量添加数据（全部字段）</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert into</span> 表名 <span class="keyword">values</span> (值<span class="number">1</span>, 值<span class="number">2</span>, ...), (值<span class="number">1</span>, 值<span class="number">2</span>, ...);</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>案例</li>
+</ol>
+<ul>
+<li>案例1：向emp表的username, name, gender, phone, create_time, update_time字段插入数据</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 因为设计表时create_time, update_time两个字段不能为NULL，所以也做为要插入的字段</span></span><br><span class="line"><span class="keyword">insert into</span> emp(username, name, gender, phone, create_time, update_time)</span><br><span class="line"><span class="keyword">values</span> (<span class="string">&#x27;wuji&#x27;</span>, <span class="string">&#x27;张无忌&#x27;</span>, <span class="number">1</span>, <span class="string">&#x27;13309091231&#x27;</span>, now(), now());</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>案例2：向temp表的所有字段插入数据</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 方式一</span></span><br><span class="line"><span class="keyword">insert into</span> emp(id, username, password, name, gender, phone, job, salary, image, entry_date, create_time, update_time)</span><br><span class="line">        <span class="keyword">values</span>(<span class="keyword">null</span>,<span class="string">&#x27;shinaian&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;施耐庵&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090001&#x27;</span>,<span class="number">4</span>,<span class="number">15000</span>,<span class="string">&#x27;1.jpg&#x27;</span>,<span class="string">&#x27;2000-01-01&#x27;</span>,now(),now())；</span><br><span class="line"><span class="comment">-- 方式二</span></span><br><span class="line"><span class="keyword">insert into</span> emp <span class="keyword">values</span>(<span class="keyword">null</span>,<span class="string">&#x27;likui&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;李逵&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090001&#x27;</span>,<span class="number">4</span>,<span class="number">15000</span>,<span class="string">&#x27;1.jpg&#x27;</span>,<span class="string">&#x27;2000-01-01&#x27;</span>,now(),now())；</span><br></pre></td></tr></table></figure>
+
+<p>可以省去名</p>
+<ul>
+<li>案例3：批量向emp表的username、name、gender字段插入数据</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert into</span> emp(username, name, gender, phone, create_time, update_time)</span><br><span class="line"><span class="keyword">values</span> (<span class="string">&#x27;Tom1&#x27;</span>, <span class="string">&#x27;汤姆1&#x27;</span>, <span class="number">1</span>, <span class="string">&#x27;13309091231&#x27;</span>, now(), now()),</span><br><span class="line">       (<span class="string">&#x27;Tom2&#x27;</span>, <span class="string">&#x27;汤姆2&#x27;</span>, <span class="number">1</span>, <span class="string">&#x27;13309091232&#x27;</span>, now(), now());</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>now()函数可以获得当前系统时间</li>
+</ul>
+<h3 id="修改-1"><a href="#修改-1" class="headerlink" title="修改"></a>修改</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> 表名 <span class="keyword">set</span> 字段名<span class="number">1</span> <span class="operator">=</span> 值<span class="number">1</span> , 字段名<span class="number">2</span> <span class="operator">=</span> 值<span class="number">2</span> , .... [<span class="keyword">where</span> 条件] ;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>案例1：将emp表中id为1的员工，姓名name字段更新为’张三’</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> emp <span class="keyword">set</span> name<span class="operator">=</span><span class="string">&#x27;张三&#x27;</span>, update_time<span class="operator">=</span>now() <span class="keyword">where</span> id<span class="operator">=</span><span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>案例2：将emp表的所有员工入职日期更新为’2010-01-01’</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> emp <span class="keyword">set</span> entry_date<span class="operator">=</span><span class="string">&#x27;2010-01-01&#x27;</span>, update_time<span class="operator">=</span>now();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<ul>
+<li><strong>必须带条件，不然默认为所有数据更改！</strong></li>
+<li>在修改数据时，一般需要同时修改公共字段update_time，将其修改为当前操作时间</li>
+</ul>
+<h3 id="删除-2"><a href="#删除-2" class="headerlink" title="删除"></a>删除</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> 表名  [<span class="keyword">where</span>  条件] ;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>案例1：删除emp表中id为1的员工</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> emp <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>案例2：删除emp表中所有员工</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> tb_emp;</span><br></pre></td></tr></table></figure>
+
+<h2 id="DQL"><a href="#DQL" class="headerlink" title="DQL"></a>DQL</h2><p>DQL英文全称是Data Query Language(数据查询语言)，用来查询数据库表中的记录</p>
+<ul>
+<li>查询关键字：<strong>SELECT</strong></li>
+</ul>
+<hr>
+<h3 id="语法-1"><a href="#语法-1" class="headerlink" title="语法"></a>语法</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">        字段列表</span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">        表名列表</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">        条件列表</span><br><span class="line"><span class="keyword">GROUP</span>  <span class="keyword">BY</span></span><br><span class="line">        分组字段列表</span><br><span class="line"><span class="keyword">HAVING</span></span><br><span class="line">        分组后条件列表</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span></span><br><span class="line">        排序字段列表</span><br><span class="line">LIMIT</span><br><span class="line">        分页参数</span><br></pre></td></tr></table></figure>
+
+<h3 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create table</span> emp(</span><br><span class="line">    id <span class="type">int</span> unsigned <span class="keyword">primary key</span> auto_increment comment <span class="string">&#x27;ID,主键&#x27;</span>,</span><br><span class="line">    username <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">not null</span> <span class="keyword">unique</span> comment <span class="string">&#x27;用户名&#x27;</span>,</span><br><span class="line">    password <span class="type">varchar</span>(<span class="number">32</span>) <span class="keyword">not null</span> comment <span class="string">&#x27;密码&#x27;</span>,</span><br><span class="line">    name <span class="type">varchar</span>(<span class="number">10</span>) <span class="keyword">not null</span> comment <span class="string">&#x27;姓名&#x27;</span>,</span><br><span class="line">    gender tinyint unsigned <span class="keyword">not null</span> comment <span class="string">&#x27;性别, 1:男, 2:女&#x27;</span>,</span><br><span class="line">    phone <span class="type">char</span>(<span class="number">11</span>) <span class="keyword">not null</span> <span class="keyword">unique</span> comment <span class="string">&#x27;手机号&#x27;</span>,</span><br><span class="line">    job tinyint unsigned comment <span class="string">&#x27;职位, 1:班主任,2:讲师,3:学工主管,4:教研主管,5:咨询师&#x27;</span>,</span><br><span class="line">    salary <span class="type">int</span> unsigned comment <span class="string">&#x27;薪资&#x27;</span>,</span><br><span class="line">    image <span class="type">varchar</span>(<span class="number">300</span>) comment <span class="string">&#x27;头像&#x27;</span>,</span><br><span class="line">    entry_date <span class="type">date</span> comment <span class="string">&#x27;入职日期&#x27;</span>,</span><br><span class="line">    create_time datetime comment <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">    update_time datetime comment <span class="string">&#x27;修改时间&#x27;</span></span><br><span class="line">) comment <span class="string">&#x27;员工表&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 准备测试数据</span></span><br><span class="line"><span class="keyword">INSERT INTO</span> emp(id, username, password, name, gender, phone, job, salary, image, entry_date, create_time, update_time)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="number">1</span>,<span class="string">&#x27;shinaian&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;施耐庵&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090001&#x27;</span>,<span class="number">4</span>,<span class="number">15000</span>,<span class="string">&#x27;1.jpg&#x27;</span>,<span class="string">&#x27;2000-01-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:35&#x27;</span>),</span><br><span class="line">     (<span class="number">2</span>,<span class="string">&#x27;songjiang&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;宋江&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090002&#x27;</span>,<span class="number">2</span>,<span class="number">8600</span>,<span class="string">&#x27;2.jpg&#x27;</span>,<span class="string">&#x27;2015-01-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:37&#x27;</span>),</span><br><span class="line">     (<span class="number">3</span>,<span class="string">&#x27;lujunyi&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;卢俊义&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090003&#x27;</span>,<span class="number">2</span>,<span class="number">8900</span>,<span class="string">&#x27;3.jpg&#x27;</span>,<span class="string">&#x27;2008-05-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:39&#x27;</span>),</span><br><span class="line">     (<span class="number">4</span>,<span class="string">&#x27;wuyong&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;吴用&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090004&#x27;</span>,<span class="number">2</span>,<span class="number">9200</span>,<span class="string">&#x27;4.jpg&#x27;</span>,<span class="string">&#x27;2007-01-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:41&#x27;</span>),</span><br><span class="line">     (<span class="number">5</span>,<span class="string">&#x27;gongsunsheng&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;公孙胜&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090005&#x27;</span>,<span class="number">2</span>,<span class="number">9500</span>,<span class="string">&#x27;5.jpg&#x27;</span>,<span class="string">&#x27;2012-12-05&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:43&#x27;</span>),</span><br><span class="line">     (<span class="number">6</span>,<span class="string">&#x27;huosanniang&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;扈三娘&#x27;</span>,<span class="number">2</span>,<span class="string">&#x27;13309090006&#x27;</span>,<span class="number">3</span>,<span class="number">6500</span>,<span class="string">&#x27;6.jpg&#x27;</span>,<span class="string">&#x27;2013-09-05&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:45&#x27;</span>),</span><br><span class="line">     (<span class="number">7</span>,<span class="string">&#x27;chaijin&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;柴进&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090007&#x27;</span>,<span class="number">1</span>,<span class="number">4700</span>,<span class="string">&#x27;7.jpg&#x27;</span>,<span class="string">&#x27;2005-08-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:47&#x27;</span>),</span><br><span class="line">     (<span class="number">8</span>,<span class="string">&#x27;likui&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;李逵&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090008&#x27;</span>,<span class="number">1</span>,<span class="number">4800</span>,<span class="string">&#x27;8.jpg&#x27;</span>,<span class="string">&#x27;2014-11-09&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:49&#x27;</span>),</span><br><span class="line">     (<span class="number">9</span>,<span class="string">&#x27;wusong&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;武松&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090009&#x27;</span>,<span class="number">1</span>,<span class="number">4900</span>,<span class="string">&#x27;9.jpg&#x27;</span>,<span class="string">&#x27;2011-03-11&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:51&#x27;</span>),</span><br><span class="line">     (<span class="number">10</span>,<span class="string">&#x27;lichong&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;林冲&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090010&#x27;</span>,<span class="number">1</span>,<span class="number">5000</span>,<span class="string">&#x27;10.jpg&#x27;</span>,<span class="string">&#x27;2013-09-05&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:53&#x27;</span>),</span><br><span class="line">     (<span class="number">11</span>,<span class="string">&#x27;huyanzhuo&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;呼延灼&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090011&#x27;</span>,<span class="number">2</span>,<span class="number">9700</span>,<span class="string">&#x27;11.jpg&#x27;</span>,<span class="string">&#x27;2007-02-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:55&#x27;</span>),</span><br><span class="line">     (<span class="number">12</span>,<span class="string">&#x27;xiaoliguang&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;小李广&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090012&#x27;</span>,<span class="number">2</span>,<span class="number">10000</span>,<span class="string">&#x27;12.jpg&#x27;</span>,<span class="string">&#x27;2008-08-18&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:57&#x27;</span>),</span><br><span class="line">     (<span class="number">13</span>,<span class="string">&#x27;yangzhi&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;杨志&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090013&#x27;</span>,<span class="number">1</span>,<span class="number">5300</span>,<span class="string">&#x27;13.jpg&#x27;</span>,<span class="string">&#x27;2012-11-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:59&#x27;</span>),</span><br><span class="line">     (<span class="number">14</span>,<span class="string">&#x27;shijin&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;史进&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090014&#x27;</span>,<span class="number">2</span>,<span class="number">10600</span>,<span class="string">&#x27;14.jpg&#x27;</span>,<span class="string">&#x27;2002-08-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:36:01&#x27;</span>),</span><br><span class="line">     (<span class="number">15</span>,<span class="string">&#x27;sunerniang&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;孙二娘&#x27;</span>,<span class="number">2</span>,<span class="string">&#x27;13309090015&#x27;</span>,<span class="number">2</span>,<span class="number">10900</span>,<span class="string">&#x27;15.jpg&#x27;</span>,<span class="string">&#x27;2011-05-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:36:03&#x27;</span>),</span><br><span class="line">     (<span class="number">16</span>,<span class="string">&#x27;luzhishen&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;鲁智深&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090016&#x27;</span>,<span class="number">2</span>,<span class="number">9600</span>,<span class="string">&#x27;16.jpg&#x27;</span>,<span class="string">&#x27;2010-01-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:36:05&#x27;</span>),</span><br><span class="line">     (<span class="number">17</span>,<span class="string">&#x27;liying&#x27;</span>,<span class="string">&#x27;12345678&#x27;</span>,<span class="string">&#x27;李应&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090017&#x27;</span>,<span class="number">1</span>,<span class="number">5800</span>,<span class="string">&#x27;17.jpg&#x27;</span>,<span class="string">&#x27;2015-03-21&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:36:07&#x27;</span>),</span><br><span class="line">     (<span class="number">18</span>,<span class="string">&#x27;shiqian&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;时迁&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090018&#x27;</span>,<span class="number">2</span>,<span class="number">10200</span>,<span class="string">&#x27;18.jpg&#x27;</span>,<span class="string">&#x27;2015-01-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:36:09&#x27;</span>),</span><br><span class="line">     (<span class="number">19</span>,<span class="string">&#x27;gudasao&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;顾大嫂&#x27;</span>,<span class="number">2</span>,<span class="string">&#x27;13309090019&#x27;</span>,<span class="number">2</span>,<span class="number">10500</span>,<span class="string">&#x27;19.jpg&#x27;</span>,<span class="string">&#x27;2008-01-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:36:11&#x27;</span>),</span><br><span class="line">     (<span class="number">20</span>,<span class="string">&#x27;ruanxiaoer&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;阮小二&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090020&#x27;</span>,<span class="number">2</span>,<span class="number">10800</span>,<span class="string">&#x27;20.jpg&#x27;</span>,<span class="string">&#x27;2018-01-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:36:13&#x27;</span>),</span><br><span class="line">     (<span class="number">21</span>,<span class="string">&#x27;ruanxiaowu&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;阮小五&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090021&#x27;</span>,<span class="number">5</span>,<span class="number">5200</span>,<span class="string">&#x27;21.jpg&#x27;</span>,<span class="string">&#x27;2015-01-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:36:15&#x27;</span>),</span><br><span class="line">     (<span class="number">22</span>,<span class="string">&#x27;ruanxiaoqi&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;阮小七&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090022&#x27;</span>,<span class="number">5</span>,<span class="number">5500</span>,<span class="string">&#x27;22.jpg&#x27;</span>,<span class="string">&#x27;2016-01-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:36:17&#x27;</span>),</span><br><span class="line">     (<span class="number">23</span>,<span class="string">&#x27;ruanji&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;阮籍&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090023&#x27;</span>,<span class="number">5</span>,<span class="number">5800</span>,<span class="string">&#x27;23.jpg&#x27;</span>,<span class="string">&#x27;2012-01-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:36:19&#x27;</span>),</span><br><span class="line">     (<span class="number">24</span>,<span class="string">&#x27;tongwei&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;童威&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090024&#x27;</span>,<span class="number">5</span>,<span class="number">5000</span>,<span class="string">&#x27;24.jpg&#x27;</span>,<span class="string">&#x27;2006-01-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:36:21&#x27;</span>),</span><br><span class="line">     (<span class="number">25</span>,<span class="string">&#x27;tongmeng&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;童猛&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090025&#x27;</span>,<span class="number">5</span>,<span class="number">4800</span>,<span class="string">&#x27;25.jpg&#x27;</span>,<span class="string">&#x27;2002-01-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:36:23&#x27;</span>),</span><br><span class="line">     (<span class="number">26</span>,<span class="string">&#x27;yanshun&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;燕顺&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090026&#x27;</span>,<span class="number">5</span>,<span class="number">5400</span>,<span class="string">&#x27;26.jpg&#x27;</span>,<span class="string">&#x27;2011-01-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:36:25&#x27;</span>),</span><br><span class="line">     (<span class="number">27</span>,<span class="string">&#x27;lijun&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;李俊&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090027&#x27;</span>,<span class="number">5</span>,<span class="number">6600</span>,<span class="string">&#x27;27.jpg&#x27;</span>,<span class="string">&#x27;2004-01-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:36:27&#x27;</span>),</span><br><span class="line">     (<span class="number">28</span>,<span class="string">&#x27;lizhong&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;李忠&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090028&#x27;</span>,<span class="number">5</span>,<span class="number">5000</span>,<span class="string">&#x27;28.jpg&#x27;</span>,<span class="string">&#x27;2007-01-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:36:29&#x27;</span>),</span><br><span class="line">     (<span class="number">29</span>,<span class="string">&#x27;songqing&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;宋清&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090029&#x27;</span>,<span class="number">5</span>,<span class="number">5100</span>,<span class="string">&#x27;29.jpg&#x27;</span>,<span class="string">&#x27;2020-01-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:36:31&#x27;</span>),</span><br><span class="line">     (<span class="number">30</span>,<span class="string">&#x27;liyun&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>,<span class="string">&#x27;李云&#x27;</span>,<span class="number">1</span>,<span class="string">&#x27;13309090030&#x27;</span>,<span class="keyword">NULL</span>,<span class="keyword">NULL</span>,<span class="string">&#x27;30.jpg&#x27;</span>,<span class="string">&#x27;2020-03-01&#x27;</span>,<span class="string">&#x27;2024-04-11 16:35:33&#x27;</span>,<span class="string">&#x27;2024-04-11 16:36:31&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="基本查询"><a href="#基本查询" class="headerlink" title="基本查询"></a>基本查询</h3><ul>
+<li>查询多个字段</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> 字段<span class="number">1</span>, 字段<span class="number">2</span>, 字段<span class="number">3</span> <span class="keyword">from</span>  表名;   <span class="operator">/</span><span class="operator">/</span>多个字段之间用逗号分隔</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查询所有字段（通配符）</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span>  <span class="keyword">from</span>  表名;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置别名</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> 字段<span class="number">1</span> [ <span class="keyword">as</span> 别名<span class="number">1</span> ] , 字段<span class="number">2</span> [ <span class="keyword">as</span> 别名<span class="number">2</span> ]  <span class="keyword">from</span>  表名;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>去除重复记录</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">distinct</span> 字段列表 <span class="keyword">from</span>  表名;</span><br></pre></td></tr></table></figure>
+
+<p><strong>案例1：查询指定字段 name，entry_date并返回</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> name,entry_date <span class="keyword">from</span> emp;   </span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407111507055.7i0p9a7r6g.webp"
+                         alt="image-20250407111507055" align='left'
+                 >
+
+<p><strong>案例2：查询返回所有字段</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> emp;</span><br></pre></td></tr></table></figure>
+
+<p>*号代表查询所有字段，在实际开发中尽量少用（不直观、影响效率，具体原因在<code>MySQL-从架构原理到索引及SQL优化</code>中有讲）。</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407111924775.92qg8r59s8.webp"
+                         alt="image-20250407111924775" align='left'
+                 >
+
+<p><strong>案例3：查询所有员工的 name, entry_date，并起别名(姓名、入职日期)</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 方式1：</span></span><br><span class="line"><span class="keyword">select</span> name <span class="keyword">as</span> 姓名, entry_date <span class="keyword">as</span> 入职日期 <span class="keyword">from</span> emp;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 方式2： 别名中有特殊字符时，使用&#x27;&#x27;或&quot;&quot;包含</span></span><br><span class="line"><span class="keyword">select</span> name <span class="keyword">as</span> <span class="string">&#x27;姓 名&#x27;</span>, entry_date <span class="keyword">as</span> <span class="string">&#x27;入职日期&#x27;</span> <span class="keyword">from</span> emp;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 方式3：</span></span><br><span class="line"><span class="keyword">select</span> name <span class="keyword">as</span> &quot;姓名&quot;, entry_date <span class="keyword">as</span> &quot;入职日期&quot; <span class="keyword">from</span> emp;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- as关键字可省略</span></span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407112428109.9dda1wkhxl.webp"
+                         alt="image-20250407112428109" align='left'
+                 >
+
+<p><strong>案例4：查询已有的员工关联了哪几种职位(不要重复)</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">distinct</span> job <span class="keyword">from</span> emp;</span><br></pre></td></tr></table></figure>
+
+<p>如果不加distinct：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407112650904.8dx6oqhqru.webp"
+                         alt="image-20250407112650904" align='left'
+                 >
+
+<p>加了distinct之后：</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407112721245.8vn8dbit7j.webp"
+                         alt="image-20250407112721245" align='left'
+                 >
+
+<blockquote>
+<p>distinct关键字就是用去除重复字段的。</p>
+</blockquote>
+<h3 id="条件查询（where）"><a href="#条件查询（where）" class="headerlink" title="条件查询（where）"></a>条件查询（where）</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span>  字段列表  <span class="keyword">from</span>   表名   <span class="keyword">where</span>   条件列表 ; <span class="comment">-- 条件列表：意味着可以有多个条件</span></span><br></pre></td></tr></table></figure>
+
+<p>SQL语句当中构造条件的运算符分为两类：</p>
+<ul>
+<li>比较运算符</li>
+<li>逻辑运算符</li>
+</ul>
+<p>常用的比较运算符如下: </p>
+<table>
+<thead>
+<tr>
+<th>比较运算符</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&gt;</td>
+<td>大于</td>
+</tr>
+<tr>
+<td>&gt;&#x3D;</td>
+<td>大于等于</td>
+</tr>
+<tr>
+<td>&lt;</td>
+<td>小于</td>
+</tr>
+<tr>
+<td>&lt;&#x3D;</td>
+<td>小于等于</td>
+</tr>
+<tr>
+<td>&#x3D;</td>
+<td>等于</td>
+</tr>
+<tr>
+<td>&lt;&gt; 或 !&#x3D;</td>
+<td>不等于</td>
+</tr>
+<tr>
+<td>between … and …</td>
+<td>在某个范围之内(含最小、最大值)</td>
+</tr>
+<tr>
+<td>in(…)</td>
+<td>在in之后的列表中的值，多选一</td>
+</tr>
+<tr>
+<td>like 占位符</td>
+<td>模糊匹配(_匹配单个字符, %匹配任意个字符)</td>
+</tr>
+<tr>
+<td>is null</td>
+<td>是null</td>
+</tr>
+</tbody></table>
+<p>常用的逻辑运算符如下:</p>
+<table>
+<thead>
+<tr>
+<th>逻辑运算符</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>and 或 &amp;&amp;</td>
+<td>并且 (多个条件同时成立)</td>
+</tr>
+<tr>
+<td>or 或 ||</td>
+<td>或者 (多个条件任意一个成立)</td>
+</tr>
+<tr>
+<td>not 或 !</td>
+<td>非 , 不是</td>
+</tr>
+</tbody></table>
+<p>下面跟随示例来感受每个运算符的作用吧：</p>
+<h4 id=""><a href="#" class="headerlink" title="&#x3D;"></a>&#x3D;</h4><p><strong>查询姓名为柴进的员工</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">where</span> name <span class="operator">=</span> <span class="string">&#x27;柴进&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407113318084.7lkb700twg.webp"
+                         alt="image-20250407113318084" align='left'
+                 >
+
+<h4 id="-1"><a href="#-1" class="headerlink" title="&gt; &lt;"></a>&gt; &lt;</h4><p><strong>查询薪资小于等于5000 的员工信息</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">where</span> salary <span class="operator">&lt;=</span><span class="number">5000</span>;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407113440291.92qg8r59sc.webp"
+                         alt="image-20250407113440291" align='left'
+                 >
+
+<h4 id="null"><a href="#null" class="headerlink" title="null"></a>null</h4><p><strong>查询没有分配职位的员工信息</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">where</span> job <span class="keyword">is</span> <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407113609910.1lc529rjd9.webp"
+                         alt="image-20250407113609910" align='left'
+                 >
+
+<p>注意：查询为NULL的数据时，不能使用 <code>= null</code> 或 <code>！=null</code> 。得使用 <code>is null</code> 或 <code>is not null</code></p>
+<p><strong>查询有职位的员工信息</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">where</span> job <span class="keyword">is</span> <span class="keyword">not null</span>;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407113706707.2yyo6b2le6.webp"
+                         alt="image-20250407113706707" align='left'
+                 >
+
+<h4 id="和"><a href="#和" class="headerlink" title="!&#x3D;和&lt;&gt;"></a>!&#x3D;和&lt;&gt;</h4><p><strong>查询密码不等于 ‘123456’ 的员工信息</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">where</span> password <span class="operator">!=</span><span class="string">&#x27;123456&#x27;</span>;  <span class="operator">/</span><span class="operator">/</span>也可以写<span class="keyword">where</span> password <span class="operator">&lt;&gt;</span> <span class="string">&#x27;123456&#x27;</span>;最好用！<span class="operator">=</span></span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407113609910.1lc529rjd9.webp"
+                         alt="image-20250407113609910" align='left'
+                 >
+
+<h4 id="between…and"><a href="#between…and" class="headerlink" title="between…and.."></a>between…and..</h4><ol>
+<li><strong>查询入职日期 在  ‘2000-01-01’ (包含)  到  ‘2010-01-01’(包含) 之间的员工信息</strong></li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">where</span> entry_date <span class="keyword">between</span> <span class="string">&#x27;2000-01-01&#x27;</span><span class="keyword">and</span> <span class="string">&#x27;2010-01-01&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407114008206.1lc529rjdc.webp"
+                         alt="image-20250407114008206" align='left'
+                 >
+
+<blockquote>
+<p><strong>由此可见between，and包含端点</strong></p>
+</blockquote>
+<ol start="2">
+<li><strong>查询入职时间 在 ‘2000-01-01’ (包含) 到 ‘2010-01-01’(包含) 之间 且 性别为女 的员工信息</strong></li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">where</span> (entry_date <span class="keyword">between</span> <span class="string">&#x27;2000-01-01&#x27;</span><span class="keyword">and</span> <span class="string">&#x27;2010-01-01&#x27;</span>)</span><br><span class="line">    <span class="keyword">and</span> gender <span class="operator">=</span><span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407114232687.51egud16fk.webp"
+                         alt="image-20250407114232687" align='left'
+                 >
+
+<blockquote>
+<p><strong>两个条件中有两个and，可能混淆，可以用括号括住，使逻辑更加清晰</strong></p>
+</blockquote>
+<h4 id="in"><a href="#in" class="headerlink" title="in"></a>in</h4><p><strong>查询职位是 2 (讲师), 3 (学工主管), 4 (教研主管) 的员工信息</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">where</span> job <span class="operator">=</span> <span class="number">2</span> <span class="keyword">or</span> job <span class="operator">=</span> <span class="number">3</span> <span class="keyword">or</span> job <span class="operator">=</span> <span class="number">4</span>;  <span class="operator">/</span><span class="operator">/</span>不可以直接数字之间使用<span class="keyword">or</span>分离（亲身实验）</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">where</span> job <span class="keyword">in</span>(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>);  <span class="operator">/</span><span class="operator">/</span>多选一</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407114551612.41ydh6yf9t.webp"
+                         alt="image-20250407114551612" align='left'
+                 >
+
+<h4 id="模糊查询"><a href="#模糊查询" class="headerlink" title="模糊查询"></a>模糊查询</h4><ol>
+<li><strong>查询姓名为两个字的员工信息</strong></li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">where</span> name <span class="keyword">like</span> <span class="string">&#x27;__&#x27;</span>;  # 通配符 &quot;_&quot; 代表任意<span class="number">1</span>个字符</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407115008052.26lsokloiz.webp"
+                         alt="image-20250407115008052" align='left'
+                 >
+
+<blockquote>
+<p>_只能表示一个字符</p>
+</blockquote>
+<ol start="2">
+<li>查询姓 ‘阮’ 的员工信息</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">where</span> name <span class="keyword">like</span> <span class="string">&#x27;阮%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407115203816.8adkr0oo3a.webp"
+                         alt="image-20250407115203816" align='left'
+                 >
+
+<blockquote>
+<p><strong>由此可见%关键字不会限制字数</strong></p>
+</blockquote>
+<ol start="3">
+<li>查询姓名中包含 ‘二’  的员工信息</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">where</span> name <span class="keyword">like</span> <span class="string">&#x27;%二%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407115322100.60uk7j3mge.webp"
+                         alt="image-20250407115322100" align='left'
+                 >
+
+<h3 id="聚合函数"><a href="#聚合函数" class="headerlink" title="聚合函数"></a>聚合函数</h3><blockquote>
+<p>之前我们做的查询都是<strong>横向查询</strong>，就是根据条件一行一行的进行判断，而<strong>使用聚合函数查询就是纵向查询</strong>，它是对一列的值进行计算，然后<strong>返回一个结果值</strong>。</p>
+</blockquote>
+<p>常用聚合函数：</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>count</td>
+<td>按照列去统计有多少行数据，如果这一列中有null的行，该行不会被统计在其中</td>
+</tr>
+<tr>
+<td>max</td>
+<td>最大值</td>
+</tr>
+<tr>
+<td>min</td>
+<td>最小值</td>
+</tr>
+<tr>
+<td>avg</td>
+<td>平均值</td>
+</tr>
+<tr>
+<td>sum</td>
+<td>计算指定列的数值和，如果不是数值类型，那么计算结果为0</td>
+</tr>
+</tbody></table>
+<p><strong>注意 : 聚合函数会忽略空值，对NULL值不作为统计</strong>。</p>
+<h4 id="count"><a href="#count" class="headerlink" title="count"></a>count</h4><p><strong>统计该企业员工数量</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(id) <span class="keyword">from</span> emp;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407121951284.2yyo6b2a9b.webp"
+                         alt="image-20250407121951284" 
+                 >
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(job) <span class="keyword">from</span> emp;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407122131347.5c1anigem1.webp"
+                         alt="image-20250407122131347" 
+                 >
+
+<p> <strong>由此可见聚合函数会忽略空值，对NULL值不作为统计</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> emp; <span class="operator">/</span><span class="operator">/</span>优先</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407122314334.6bhe0oiult.webp"
+                         alt="image-20250407122314334" align='left'
+                 >
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="number">1</span>) <span class="keyword">from</span> emp;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407122436789.26lsoklzp6.webp"
+                         alt="image-20250407122436789" align='left'
+                 >
+
+<h4 id="avg"><a href="#avg" class="headerlink" title="avg"></a>avg</h4><p>统计该企业员工的平均薪资</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">avg</span>(salary) <span class="keyword">from</span> emp;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407122548129.99to46rf97.webp"
+                         alt="image-20250407122548129" align='left' 
+                 >
+
+<h4 id="min"><a href="#min" class="headerlink" title="min"></a>min</h4><p>统计该企业员工的最低薪资</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">min</span>(salary) <span class="keyword">from</span> emp;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407122640194.102hfyx33w.webp"
+                         alt="image-20250407122640194" align='left'
+                 >
+
+<h4 id="max"><a href="#max" class="headerlink" title="max"></a>max</h4><p>统计该企业员工的最高薪资</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">max</span>(salary) <span class="keyword">from</span> emp;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407122739702.5j4iiy2k1o.webp"
+                         alt="image-20250407122739702" align='left'
+                 >
+
+<h4 id="sum"><a href="#sum" class="headerlink" title="sum"></a>sum</h4><p>统计该企业每月要给员工发放的薪资总额(薪资之和)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">sum</span>(salary) <span class="keyword">from</span> emp;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407122824598.6iklw45b7h.webp"
+                         alt="image-20250407122824598" align='left'
+                 >
+
+<h3 id="分组查询（group-by）"><a href="#分组查询（group-by）" class="headerlink" title="分组查询（group by）"></a>分组查询（group by）</h3><blockquote>
+<p>分组： 按照某一列或者某几列，把相同的数据进行合并输出</p>
+</blockquote>
+<p>分组其实就是按列<strong>进行分类(指定列下相同的数据归为一类)</strong>，然后可以对分类完的数据进行合并计算。</p>
+<p>分组查询通常<strong>会使用聚合函数进行计算</strong>。</p>
+<p>基本语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> 字段列表 <span class="keyword">from</span> 表名 [<span class="keyword">where</span> 条件] <span class="keyword">group</span> <span class="keyword">by</span> 分组字段名 [<span class="keyword">having</span> 分组后过滤条件];</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>根据性别分组 , 统计男性和女性员工的数量</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> gender, <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> emp <span class="keyword">group</span> <span class="keyword">by</span> gender;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407123909121.5xay9tajqy.webp"
+                         alt="image-20250407123909121" align='left'
+                 >
+
+<ol start="2">
+<li>查询入职时间在 ‘2015-01-01’ (包含) 以前的员工 , 并对结果根据职位分组 , 获取员工数量大于等于2的职位</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> job, <span class="built_in">count</span>(<span class="operator">*</span>)</span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">where</span> entry_date <span class="operator">&lt;=</span> <span class="string">&#x27;2015-01-01&#x27;</span>   <span class="comment">-- 分组前条件</span></span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> job                      <span class="comment">-- 按照job字段分组</span></span><br><span class="line"><span class="keyword">having</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="operator">&gt;=</span> <span class="number">2</span>;             <span class="comment">-- 分组后条件</span></span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407124310547.3k8bslwqkb.webp"
+                         alt="image-20250407124310547" align='left'
+                 >
+
+<h3 id="where与having的区别"><a href="#where与having的区别" class="headerlink" title="where与having的区别"></a>where与having的区别</h3><p><strong>行时机不同：<strong>where是</strong>分组之前</strong>进行过滤，不满足where条件，不参与分组；而having是<strong>分组之后</strong>对结果进行过滤。</p>
+<p>**判断条件不同：**where不能对聚合函数进行判断，而having可以。</p>
+<p><strong>注意事项:</strong></p>
+<ul>
+<li>分组之后，查询的字段一般为<strong>聚合函数和分组字段</strong>，查询其他字段无任何意义。</li>
+<li>执行顺序：where &gt; 聚合函数 &gt; having 。</li>
+</ul>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407123636082.1e8x6u5dz2.webp"
+                         alt="image-20250407123636082" align='left'
+                 >
+
+<blockquote>
+<p>如上，就是查询的字段错误的原因。</p>
+</blockquote>
+<h3 id="排序查询（order-by）"><a href="#排序查询（order-by）" class="headerlink" title="排序查询（order by）"></a>排序查询（order by）</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span>  字段列表  </span><br><span class="line"><span class="keyword">from</span>   表名   </span><br><span class="line">[<span class="keyword">where</span>  条件列表] </span><br><span class="line">[<span class="keyword">group</span> <span class="keyword">by</span>  分组字段 ] </span><br><span class="line"><span class="keyword">order</span>  <span class="keyword">by</span>  字段<span class="number">1</span>  排序方式<span class="number">1</span> , 字段<span class="number">2</span>  排序方式<span class="number">2</span> … ;</span><br></pre></td></tr></table></figure>
+
+<p>排序方式：</p>
+<ul>
+<li>ASC ：升序（默认值）可以不写</li>
+<li>DESC：降序</li>
+</ul>
+<p><strong>注意事项：如果是多字段排序，当第一个字段值相同时，才会根据第二个字段进行排序。</strong></p>
+<p>下面用一些具体示例来体会：</p>
+<ol>
+<li>根据入职时间, 对员工进行升序排序</li>
+</ol>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407124941614.1zikt4zj3y.webp"
+                         alt="image-20250407124941614" align='left'
+                 >
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> entry_date;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407125047815.9rjpsrshog.webp"
+                         alt="image-20250407125047815" align='left'
+                 >
+
+<blockquote>
+<p>删掉asc之后没有改变，证明升序排列是默认的。</p>
+</blockquote>
+<ol start="2">
+<li>根据入职时间，对员工进行降序排序</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> entry_date <span class="keyword">desc</span> ;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407125212576.54y2s2u96q.webp"
+                         alt="image-20250407125212576" align='left'
+                 >
+
+<ol start="3">
+<li>根据入职时间对公司的员工进行升序排序，入职时间相同，再按照更新时间进行降序排序</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> entry_date ,update_time <span class="keyword">desc</span> ;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407125349526.491lcmk9l0.webp"
+                         alt="image-20250407125349526" 
+                 >
+
+<h3 id="分页查询（limit）"><a href="#分页查询（limit）" class="headerlink" title="分页查询（limit）"></a>分页查询（limit）</h3><p>基本语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span>  字段列表  <span class="keyword">from</span>  表名  limit  起始索引, 查询记录数 ;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意事项:</strong></p>
+<ol>
+<li>起始索引从0开始。           <ul>
+<li>计算公式 ：起始索引 &#x3D; （查询页码 - 1）* 每页显示记录数</li>
+</ul>
+</li>
+<li>分页查询是数据库的方言，不同的数据库有不同的实现，MySQL中是LIMIT</li>
+<li>如果查询的是第一页数据，起始索引可以省略，直接简写为 limit  条数</li>
+</ol>
+<p>依旧是根据示例来理解：</p>
+<ol>
+<li>起始索引0开始查询员工数据, 每页展示5条记录</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> emp limit <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407130122374.5q7qedoebp.webp"
+                         alt="image-20250407130122374" align='left'
+                 >
+
+<ol start="2">
+<li>查询第1页员工数据, 每页展示5条记录</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> emp limit <span class="number">0</span>,<span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<p>第一页就是索引为0</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407130317381.7p3x4ptwnb.webp"
+                         alt="image-20250407130317381" align='left'
+                 >
+
+<ol start="3">
+<li>查询第2页员工数据, 每页展示5条记录</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> emp limit <span class="number">5</span>,<span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<p>每页五条，第二页就是6-10，故起始索引为5</p>
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407130600156.7zqqxv94so.webp"
+                         alt="image-20250407130600156" align='left'
+                 >
+
+<ol start="4">
+<li>查询 第3页 员工数据, 每页展示5条记录</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> emp limit <span class="number">10</span>,<span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<img    
+                       lazyload
+                       alt="image"
+                       data-src="https://OperationT00.github.io/picx-images-hosting/blog-assets-MySQL基础/image-20250407130632205.9gwvzmd9jd.webp"
+                         alt="image-20250407130632205" align='left'
+                 >
+
+<p>*<em>总结：起始索引&#x3D;（页码-1）<em>每页展示记录数</em></em></p>
+<hr>
+
                     
                 </div>
 
@@ -303,6 +1450,14 @@
 
                 <div class="post-bottom-tags-and-share border-box">
                     <div>
+                        
+                            <ul class="post-tags-box border-box">
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/MySQL/">MySQL</a>
+                                    </li>
+                                
+                            </ul>
                         
                     </div>
                     <div>
@@ -367,7 +1522,7 @@
             <div class="pc-post-toc right-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-text">数据模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%88RDBMS%EF%BC%89"><span class="nav-text">关系型数据库（RDBMS）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B-1"><span class="nav-text">数据模型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL"><span class="nav-text">SQL</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#DDL"><span class="nav-text">DDL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C"><span class="nav-text">数据库操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2"><span class="nav-text">查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%EF%BC%88%E5%88%87%E6%8D%A2%EF%BC%89"><span class="nav-text">使用（切换）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4"><span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-text">数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E5%80%BC%E7%B1%BB%E5%9E%8B"><span class="nav-text">数值类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B1%BB%E5%9E%8B"><span class="nav-text">字符串类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#char%EF%BC%8Cvchar%E8%AF%A6%E8%A7%A3"><span class="nav-text">char，vchar详解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A5%E6%9C%9F%E6%97%B6%E9%97%B4%E7%B1%BB%E5%9E%8B"><span class="nav-text">日期时间类型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A8%E7%BB%93%E6%9E%84"><span class="nav-text">表结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA"><span class="nav-text">创建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2-1"><span class="nav-text">查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9"><span class="nav-text">修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4-1"><span class="nav-text">删除</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%A6%E6%9D%9F"><span class="nav-text">约束</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DML"><span class="nav-text">DML</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A2%9E%E5%8A%A0"><span class="nav-text">增加</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95"><span class="nav-text">语法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9-1"><span class="nav-text">修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4-2"><span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DQL"><span class="nav-text">DQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95-1"><span class="nav-text">语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87"><span class="nav-text">数据准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%9F%A5%E8%AF%A2"><span class="nav-text">基本查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E6%9F%A5%E8%AF%A2%EF%BC%88where%EF%BC%89"><span class="nav-text">条件查询（where）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-text">&#x3D;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#-1"><span class="nav-text">&gt; &lt;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-text">null</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%92%8C"><span class="nav-text">!&#x3D;和&lt;&gt;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#between%E2%80%A6and"><span class="nav-text">between…and..</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#in"><span class="nav-text">in</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A8%A1%E7%B3%8A%E6%9F%A5%E8%AF%A2"><span class="nav-text">模糊查询</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%9A%E5%90%88%E5%87%BD%E6%95%B0"><span class="nav-text">聚合函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#count"><span class="nav-text">count</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#avg"><span class="nav-text">avg</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#min"><span class="nav-text">min</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#max"><span class="nav-text">max</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sum"><span class="nav-text">sum</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E6%9F%A5%E8%AF%A2%EF%BC%88group-by%EF%BC%89"><span class="nav-text">分组查询（group by）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#where%E4%B8%8Ehaving%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">where与having的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E6%9F%A5%E8%AF%A2%EF%BC%88order-by%EF%BC%89"><span class="nav-text">排序查询（order by）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2%EF%BC%88limit%EF%BC%89"><span class="nav-text">分页查询（limit）</span></a></li></ol></li></ol></li></ol>
     </div>
 </div>
 
@@ -402,7 +1557,7 @@
             
                 <span class="count-item border-box word">
                     <span class="item-type border-box">Total words</span>
-                    <span class="item-value border-box word">37k</span>
+                    <span class="item-value border-box word">44.1k</span>
                 </span>
             
 
@@ -550,7 +1705,7 @@
             <div class="tablet-post-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-text">数据模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%88RDBMS%EF%BC%89"><span class="nav-text">关系型数据库（RDBMS）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B-1"><span class="nav-text">数据模型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL"><span class="nav-text">SQL</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#DDL"><span class="nav-text">DDL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C"><span class="nav-text">数据库操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2"><span class="nav-text">查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%EF%BC%88%E5%88%87%E6%8D%A2%EF%BC%89"><span class="nav-text">使用（切换）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4"><span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-text">数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E5%80%BC%E7%B1%BB%E5%9E%8B"><span class="nav-text">数值类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B1%BB%E5%9E%8B"><span class="nav-text">字符串类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#char%EF%BC%8Cvchar%E8%AF%A6%E8%A7%A3"><span class="nav-text">char，vchar详解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A5%E6%9C%9F%E6%97%B6%E9%97%B4%E7%B1%BB%E5%9E%8B"><span class="nav-text">日期时间类型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A8%E7%BB%93%E6%9E%84"><span class="nav-text">表结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA"><span class="nav-text">创建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2-1"><span class="nav-text">查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9"><span class="nav-text">修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4-1"><span class="nav-text">删除</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%A6%E6%9D%9F"><span class="nav-text">约束</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DML"><span class="nav-text">DML</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A2%9E%E5%8A%A0"><span class="nav-text">增加</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95"><span class="nav-text">语法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9-1"><span class="nav-text">修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4-2"><span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DQL"><span class="nav-text">DQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95-1"><span class="nav-text">语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87"><span class="nav-text">数据准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%9F%A5%E8%AF%A2"><span class="nav-text">基本查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E6%9F%A5%E8%AF%A2%EF%BC%88where%EF%BC%89"><span class="nav-text">条件查询（where）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-text">&#x3D;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#-1"><span class="nav-text">&gt; &lt;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-text">null</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%92%8C"><span class="nav-text">!&#x3D;和&lt;&gt;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#between%E2%80%A6and"><span class="nav-text">between…and..</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#in"><span class="nav-text">in</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A8%A1%E7%B3%8A%E6%9F%A5%E8%AF%A2"><span class="nav-text">模糊查询</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%9A%E5%90%88%E5%87%BD%E6%95%B0"><span class="nav-text">聚合函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#count"><span class="nav-text">count</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#avg"><span class="nav-text">avg</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#min"><span class="nav-text">min</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#max"><span class="nav-text">max</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sum"><span class="nav-text">sum</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E6%9F%A5%E8%AF%A2%EF%BC%88group-by%EF%BC%89"><span class="nav-text">分组查询（group by）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#where%E4%B8%8Ehaving%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">where与having的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E6%9F%A5%E8%AF%A2%EF%BC%88order-by%EF%BC%89"><span class="nav-text">排序查询（order by）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2%EF%BC%88limit%EF%BC%89"><span class="nav-text">分页查询（limit）</span></a></li></ol></li></ol></li></ol>
     </div>
 </div>
 
